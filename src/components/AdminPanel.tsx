@@ -571,20 +571,20 @@ const QuantumCalculator = () => {
   return (
     <div className="max-w-md mx-auto glass-card p-4 md:p-8 rounded-3xl md:rounded-[3rem] border-white/5 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary animate-pulse" />
-      <div className="bg-slate-900 p-4 md:p-6 rounded-2xl mb-4 md:mb-6 text-right text-2xl md:text-3xl font-mono text-primary overflow-hidden h-16 md:h-20 flex items-center justify-end relative">
+      <div className="bg-slate-900 p-3 md:p-6 rounded-2xl mb-4 md:mb-6 text-right text-xl md:text-3xl font-mono text-primary overflow-hidden h-14 md:h-20 flex items-center justify-end relative">
         {isCalculating && (
           <div className="absolute inset-0 bg-slate-900/80 flex items-center justify-center">
-            <Loader2 className="w-6 h-6 animate-spin text-primary" />
+            <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin text-primary" />
           </div>
         )}
         {display || '0'}
       </div>
-      <div className="grid grid-cols-5 gap-1.5 md:gap-2">
+      <div className="grid grid-cols-5 gap-1 md:gap-2">
         {buttons.map(btn => (
           <button 
             key={btn} 
             onClick={() => handleBtn(btn)}
-            className={`p-2.5 md:p-4 rounded-lg md:rounded-xl font-bold transition-all text-xs md:text-base ${
+            className={`p-2 md:p-4 rounded-lg md:rounded-xl font-bold transition-all text-[10px] sm:text-xs md:text-base ${
               btn === '=' ? 'bg-primary text-white col-span-1 shadow-[0_0_15px_rgba(99,102,241,0.5)]' : 
               btn === 'C' ? 'bg-rose-500 text-white' : 
               'bg-white/5 text-white hover:bg-white/10'
@@ -678,17 +678,17 @@ const GradeManager = () => {
           ))}
         </div>
       </div>
-      <div className="glass-card p-8 rounded-[2.5rem] border-white/5 flex flex-col items-center justify-center text-center">
-        <div className="text-6xl font-display text-primary mb-2">{average}</div>
-        <p className="text-slate-500 uppercase tracking-widest text-xs">Moyenne de la Classe</p>
-        <div className="mt-8 w-full grid grid-cols-2 gap-4">
-          <div className="p-4 bg-white/5 rounded-2xl">
-            <div className="text-xs text-slate-500 mb-1">Max</div>
-            <div className="text-xl text-white font-bold">{grades.length > 0 ? Math.max(...grades) : '-'}</div>
+      <div className="glass-card p-6 md:p-8 rounded-2xl md:rounded-[2.5rem] border-white/5 flex flex-col items-center justify-center text-center">
+        <div className="text-4xl md:text-6xl font-display text-primary mb-2">{average}</div>
+        <p className="text-slate-500 uppercase tracking-widest text-[8px] md:text-xs">Moyenne de la Classe</p>
+        <div className="mt-6 md:mt-8 w-full grid grid-cols-2 gap-3 md:gap-4">
+          <div className="p-3 md:p-4 bg-white/5 rounded-xl md:rounded-2xl">
+            <div className="text-[8px] md:text-xs text-slate-500 mb-1">Max</div>
+            <div className="text-lg md:text-xl text-white font-bold">{grades.length > 0 ? Math.max(...grades) : '-'}</div>
           </div>
-          <div className="p-4 bg-white/5 rounded-2xl">
-            <div className="text-xs text-slate-500 mb-1">Min</div>
-            <div className="text-xl text-white font-bold">{grades.length > 0 ? Math.min(...grades) : '-'}</div>
+          <div className="p-3 md:p-4 bg-white/5 rounded-xl md:rounded-2xl">
+            <div className="text-[8px] md:text-xs text-slate-500 mb-1">Min</div>
+            <div className="text-lg md:text-xl text-white font-bold">{grades.length > 0 ? Math.min(...grades) : '-'}</div>
           </div>
         </div>
       </div>

@@ -140,7 +140,7 @@ export const MemoryGame: React.FC<MemoryGameProps> = ({ difficulty, grade, opera
               </div>
               {/* Back */}
               <div className="absolute inset-0 bg-primary/20 backdrop-blur-xl rounded-xl md:rounded-3xl flex items-center justify-center rotate-y-180 backface-hidden border-2 border-primary/50 p-1 md:p-4 text-center">
-                <span className="text-white font-bold text-[10px] md:text-xl break-words leading-tight">{card.content}</span>
+                <span className="text-white font-bold text-[9px] sm:text-xs md:text-xl break-words leading-tight">{card.content}</span>
               </div>
             </div>
           </motion.div>

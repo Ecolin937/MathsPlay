@@ -201,11 +201,11 @@ export default function App() {
             exit={{ y: -100, opacity: 0 }}
             className="fixed top-8 left-1/2 -translate-x-1/2 z-[500] pointer-events-none"
           >
-            <div className="glass px-8 py-4 rounded-full border-primary/30 flex items-center gap-4 shadow-[0_0_30px_rgba(99,102,241,0.3)]">
-              <div className="bg-primary/20 p-2 rounded-full">
-                <BrainCircuit className="w-6 h-6 text-primary animate-pulse" />
+            <div className="glass px-6 md:px-8 py-3 md:py-4 rounded-full border-primary/30 flex items-center gap-3 md:gap-4 shadow-[0_0_30px_rgba(99,102,241,0.3)]">
+              <div className="bg-primary/20 p-1.5 md:p-2 rounded-full">
+                <BrainCircuit className="w-5 h-5 md:w-6 md:h-6 text-primary animate-pulse" />
               </div>
-              <span className="text-xl font-display text-white tracking-widest uppercase">Bienvenue</span>
+              <span className="text-lg md:text-xl font-display text-white tracking-widest uppercase">Bienvenue</span>
             </div>
           </motion.div>
         )}
@@ -260,7 +260,7 @@ export default function App() {
                     <Sparkles className="w-4 h-4 text-primary animate-pulse" />
                     <span className="text-xs font-bold text-primary uppercase tracking-widest">Système d'Apprentissage</span>
                   </motion.div>
-                  <h1 className="text-5xl md:text-7xl lg:text-9xl font-display mb-8 tracking-tighter leading-[0.85] text-white">
+                  <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-display mb-8 tracking-tighter leading-[0.85] text-white">
                     Maths <br />
                     <span className="neon-text italic">Interactives</span>
                   </h1>
@@ -336,24 +336,24 @@ export default function App() {
                     <div className="bg-primary/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><Layout className="w-6 h-6 md:w-7 md:h-7 text-primary animate-pulse" /></div>
                     Interface de Simulation
                   </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
                     {gameStyles.map((style) => (
                       <button
                         key={style.id}
                         onClick={() => setGameMode(style.id as GameMode)}
                         className={`
-                          p-4 md:p-6 rounded-xl md:rounded-[2.5rem] border transition-all flex flex-col items-center gap-3 md:gap-5 text-center group relative overflow-hidden
+                          p-3 md:p-6 rounded-xl md:rounded-[2.5rem] border transition-all flex flex-col items-center gap-2 md:gap-5 text-center group relative overflow-hidden
                           ${gameMode === style.id 
                             ? 'border-primary bg-primary/10 text-primary shadow-[0_0_30px_rgba(99,102,241,0.2)]' 
                             : 'border-white/5 hover:border-white/20 text-slate-500'}
                         `}
                       >
-                        <div className={`w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 ${gameMode === style.id ? 'bg-primary text-white shadow-[0_0_20px_rgba(99,102,241,0.5)]' : 'bg-slate-800'}`}>
-                          {style.icon}
+                        <div className={`w-10 h-10 md:w-16 md:h-16 rounded-lg md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 ${gameMode === style.id ? 'bg-primary text-white shadow-[0_0_20px_rgba(99,102,241,0.5)]' : 'bg-slate-800'}`}>
+                          {React.cloneElement(style.icon as React.ReactElement, { className: "w-5 h-5 md:w-8 md:h-8" })}
                         </div>
                         <div>
-                          <p className="font-bold text-xs md:text-sm tracking-tight">{style.name}</p>
-                          <p className="text-[8px] md:text-[10px] opacity-40 mt-1 uppercase tracking-widest">{style.desc}</p>
+                          <p className="font-bold text-[10px] md:text-sm tracking-tight">{style.name}</p>
+                          <p className="text-[7px] md:text-[10px] opacity-40 mt-0.5 md:mt-1 uppercase tracking-widest">{style.desc}</p>
                         </div>
                         {gameMode === style.id && (
                           <motion.div layoutId="active-glow" className="absolute inset-0 bg-primary/5 -z-10" />

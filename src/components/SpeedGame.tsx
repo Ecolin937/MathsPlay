@@ -131,8 +131,12 @@ export const SpeedGame: React.FC<SpeedGameProps> = ({ difficulty, grade, operati
             exit={{ opacity: 0, y: -20 }}
           >
             <span className="text-[10px] md:text-xs font-bold text-primary uppercase tracking-[0.3em] md:tracking-[0.4em] mb-4 md:mb-6 block opacity-60">Vérification de donnée</span>
-            <h3 className="text-4xl md:text-6xl font-display mb-4 md:mb-6 text-white">{currentTask?.text}</h3>
-            <div className="text-5xl md:text-7xl font-display text-primary tracking-tighter">
+            <h3 className={`font-display mb-4 md:mb-6 text-white ${
+              currentTask?.text && currentTask.text.length > 15 
+                ? 'text-xl sm:text-2xl md:text-4xl' 
+                : 'text-3xl sm:text-4xl md:text-6xl'
+            }`}>{currentTask?.text}</h3>
+            <div className="text-4xl sm:text-5xl md:text-7xl font-display text-primary tracking-tighter">
               = {currentTask?.displayValue}
             </div>
           </motion.div>

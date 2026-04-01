@@ -81,12 +81,12 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
         <h2 className="text-2xl md:text-4xl font-display mb-2 text-white px-4">Session terminée !</h2>
         <p className="text-slate-400 mb-8 text-sm md:text-lg px-6">{message}</p>
         
-        <div className="glass-card border-primary/20 rounded-2xl md:rounded-[2.5rem] p-6 md:p-10 mb-8 w-[80%] max-w-xs relative overflow-hidden">
+        <div className="glass-card border-primary/20 rounded-2xl md:rounded-[2.5rem] p-6 md:p-10 mb-8 w-full max-w-[280px] md:max-w-xs relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" />
           <p className="text-[10px] text-primary uppercase font-bold tracking-[0.3em] mb-4">Note Finale</p>
           <div className="flex items-baseline justify-center gap-1">
-            <span className="text-5xl md:text-8xl font-display text-white">{finalGrade}</span>
-            <span className="text-lg md:text-2xl font-display text-slate-500">/ 20</span>
+            <span className="text-6xl md:text-8xl font-display text-white">{finalGrade}</span>
+            <span className="text-xl md:text-2xl font-display text-slate-500">/ 20</span>
           </div>
         </div>
 
@@ -159,7 +159,11 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
               className="relative z-10"
             >
               <span className="text-[8px] md:text-xs font-bold text-primary uppercase tracking-[0.4em] mb-2 md:mb-6 block opacity-60">Calcul en cours</span>
-              <h3 className="text-4xl md:text-9xl font-display tracking-tighter text-white">
+              <h3 className={`font-display tracking-tighter text-white ${
+                question?.text && question.text.length > 15 
+                  ? 'text-2xl sm:text-3xl md:text-6xl' 
+                  : 'text-4xl sm:text-5xl md:text-9xl'
+              }`}>
                 {question?.text}
               </h3>
             </motion.div>

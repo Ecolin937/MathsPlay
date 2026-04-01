@@ -97,12 +97,12 @@ export const PatternGame: React.FC<PatternGameProps> = ({ difficulty, grade, onB
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: i * 0.1 }}
-              className="w-10 h-10 md:w-20 md:h-20 glass rounded-lg md:rounded-2xl flex items-center justify-center text-sm md:text-3xl font-bold text-white border-white/10"
+              className="w-12 h-12 sm:w-16 md:w-20 glass rounded-lg md:rounded-2xl flex items-center justify-center text-sm sm:text-xl md:text-3xl font-bold text-white border-white/10"
             >
               {num}
             </motion.div>
           ))}
-          <div className="w-10 h-10 md:w-20 md:h-20 bg-primary/20 border-2 border-dashed border-primary/50 rounded-lg md:rounded-2xl flex items-center justify-center">
+          <div className="w-12 h-12 sm:w-16 md:w-20 bg-primary/20 border-2 border-dashed border-primary/50 rounded-lg md:rounded-2xl flex items-center justify-center">
             <HelpCircle className="w-5 h-5 md:w-8 md:h-8 text-primary animate-pulse" />
           </div>
         </div>

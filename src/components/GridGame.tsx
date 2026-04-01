@@ -156,7 +156,7 @@ export const GridGame: React.FC<GridGameProps> = ({ difficulty, grade, operation
             onClick={() => val !== '-1' && handlePick(val, idx)}
             disabled={val === '-1'}
             className={`
-              aspect-square rounded-xl md:rounded-3xl text-lg md:text-3xl font-display transition-all border
+              aspect-square rounded-xl md:rounded-3xl text-base sm:text-xl md:text-3xl font-display transition-all border
               ${val === '-1' 
                 ? 'bg-white/5 border-transparent opacity-20' 
                 : 'glass-card border-white/5 text-white hover:border-primary/50 hover:bg-white/5 shadow-lg'}
