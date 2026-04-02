@@ -235,7 +235,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-3 md:px-8 py-4 md:py-8">
         <AnimatePresence mode="wait">
           {gameState === 'home' ? (
             <motion.div
@@ -243,10 +243,10 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="space-y-16"
+              className="space-y-8 md:space-y-16"
             >
               {/* Hero Section */}
-              <section className="relative pt-6 md:pt-12 pb-10 md:pb-20 text-center lg:text-left grid lg:grid-cols-2 gap-12 items-center">
+              <section className="relative pt-4 md:pt-12 pb-8 md:pb-20 text-center lg:text-left grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
                 <motion.div
                   initial={{ x: -50, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
@@ -255,22 +255,22 @@ export default function App() {
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="inline-flex items-center gap-2 glass px-4 py-2 rounded-full mb-8 border-primary/30"
+                    className="inline-flex items-center gap-2 glass px-3 py-1.5 rounded-full mb-6 md:mb-8 border-primary/30"
                   >
-                    <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-                    <span className="text-xs font-bold text-primary uppercase tracking-widest">Système d'Apprentissage</span>
+                    <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-primary animate-pulse" />
+                    <span className="text-[10px] md:text-xs font-bold text-primary uppercase tracking-widest">Système d'Apprentissage</span>
                   </motion.div>
-                  <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-display mb-8 tracking-tighter leading-[0.85] text-white">
+                  <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-9xl font-display mb-6 md:mb-8 tracking-tighter leading-[0.9] md:leading-[0.85] text-white">
                     Maths <br />
                     <span className="neon-text italic">Interactives</span>
                   </h1>
-                  <p className="text-slate-400 text-lg md:text-xl max-w-xl mb-10 leading-relaxed">
+                  <p className="text-slate-400 text-base md:text-xl max-w-xl mb-8 md:mb-10 leading-relaxed mx-auto lg:mx-0">
                     Maîtrise les concepts complexes avec des défis personnalisés.
                   </p>
-                  <div className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center lg:justify-start">
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                     <button 
                       onClick={() => startGame('mixed')}
-                      className="bg-primary text-white px-8 md:px-10 py-4 md:py-5 rounded-xl md:rounded-2xl font-bold text-lg shadow-[0_0_30px_rgba(99,102,241,0.4)] hover:scale-105 transition-all flex items-center justify-center gap-3 group"
+                      className="bg-primary text-white px-6 md:px-10 py-3.5 md:py-5 rounded-xl md:rounded-2xl font-bold text-base md:text-lg shadow-[0_0_30px_rgba(99,102,241,0.4)] hover:scale-105 transition-all flex items-center justify-center gap-3 group"
                     >
                       <Zap className="w-5 h-5 fill-current group-hover:animate-pulse" /> Lancer l'Analyse
                     </button>
@@ -324,36 +324,36 @@ export default function App() {
 
 
               {/* Configuration Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8">
                 {/* 1. Style Selection */}
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="lg:col-span-7 glass-card p-6 md:p-10 rounded-2xl md:rounded-[3.5rem]"
+                  className="lg:col-span-7 glass-card p-5 md:p-10 rounded-2xl md:rounded-[3.5rem]"
                 >
-                  <h3 className="text-xl md:text-2xl font-display mb-6 md:mb-10 flex items-center gap-4 text-white">
-                    <div className="bg-primary/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><Layout className="w-6 h-6 md:w-7 md:h-7 text-primary animate-pulse" /></div>
+                  <h3 className="text-lg md:text-2xl font-display mb-6 md:mb-10 flex items-center gap-3 md:gap-4 text-white">
+                    <div className="bg-primary/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><Layout className="w-5 h-5 md:w-7 md:h-7 text-primary animate-pulse" /></div>
                     Interface de Simulation
                   </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
+                  <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6">
                     {gameStyles.map((style) => (
                       <button
                         key={style.id}
                         onClick={() => setGameMode(style.id as GameMode)}
                         className={`
-                          p-3 md:p-6 rounded-xl md:rounded-[2.5rem] border transition-all flex flex-col items-center gap-2 md:gap-5 text-center group relative overflow-hidden
+                          p-2.5 md:p-6 rounded-xl md:rounded-[2.5rem] border transition-all flex flex-col items-center gap-2 md:gap-5 text-center group relative overflow-hidden
                           ${gameMode === style.id 
                             ? 'border-primary bg-primary/10 text-primary shadow-[0_0_30px_rgba(99,102,241,0.2)]' 
                             : 'border-white/5 hover:border-white/20 text-slate-500'}
                         `}
                       >
-                        <div className={`w-10 h-10 md:w-16 md:h-16 rounded-lg md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 ${gameMode === style.id ? 'bg-primary text-white shadow-[0_0_20px_rgba(99,102,241,0.5)]' : 'bg-slate-800'}`}>
-                          {React.cloneElement(style.icon as React.ReactElement, { className: "w-5 h-5 md:w-8 md:h-8" })}
+                        <div className={`w-8 h-8 md:w-16 md:h-16 rounded-lg md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 ${gameMode === style.id ? 'bg-primary text-white shadow-[0_0_20px_rgba(99,102,241,0.5)]' : 'bg-slate-800'}`}>
+                          {React.cloneElement(style.icon as React.ReactElement, { className: "w-4 h-4 md:w-8 md:h-8" })}
                         </div>
                         <div>
-                          <p className="font-bold text-[10px] md:text-sm tracking-tight">{style.name}</p>
-                          <p className="text-[7px] md:text-[10px] opacity-40 mt-0.5 md:mt-1 uppercase tracking-widest">{style.desc}</p>
+                          <p className="font-bold text-[9px] md:text-sm tracking-tight">{style.name}</p>
+                          <p className="text-[6px] md:text-[10px] opacity-40 mt-0.5 md:mt-1 uppercase tracking-widest hidden sm:block">{style.desc}</p>
                         </div>
                         {gameMode === style.id && (
                           <motion.div layoutId="active-glow" className="absolute inset-0 bg-primary/5 -z-10" />
@@ -369,20 +369,20 @@ export default function App() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.2 }}
-                  className="lg:col-span-5 glass-card p-6 md:p-10 rounded-2xl md:rounded-[3.5rem] space-y-8 md:space-y-10"
+                  className="lg:col-span-5 glass-card p-5 md:p-10 rounded-2xl md:rounded-[3.5rem] space-y-6 md:space-y-10"
                 >
                   <div>
-                    <h3 className="text-lg md:text-xl font-display mb-6 md:mb-8 flex items-center gap-4 text-white">
-                      <div className="bg-secondary/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><GraduationCap className="w-5 h-5 md:w-6 md:h-6 text-secondary animate-pulse" /></div>
+                    <h3 className="text-base md:text-xl font-display mb-4 md:mb-8 flex items-center gap-3 md:gap-4 text-white">
+                      <div className="bg-secondary/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><GraduationCap className="w-4 h-4 md:w-6 md:h-6 text-secondary animate-pulse" /></div>
                       Sélection du Niveau
                     </h3>
-                    <div className="grid grid-cols-3 gap-3 md:gap-4">
+                    <div className="grid grid-cols-3 gap-2 md:gap-4">
                       {gradesList.map((g) => (
                         <button
                           key={g.id}
                           onClick={() => setGrade(g.id as Grade)}
                           className={`
-                            py-3 md:py-4 rounded-xl md:rounded-2xl border transition-all text-xs md:text-sm font-bold
+                            py-2.5 md:py-4 rounded-xl md:rounded-2xl border transition-all text-[10px] md:text-sm font-bold
                             ${grade === g.id 
                               ? 'border-secondary bg-secondary/20 text-secondary shadow-[0_0_20px_rgba(168,85,247,0.3)]' 
                               : 'border-white/5 hover:border-white/20 text-slate-500'}
@@ -395,17 +395,17 @@ export default function App() {
                   </div>
 
                   <div>
-                    <h3 className="text-lg md:text-xl font-display mb-6 md:mb-8 flex items-center gap-4 text-white">
-                      <div className="bg-accent/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><Zap className="w-5 h-5 md:w-6 md:h-6 text-accent animate-bounce" /></div>
+                    <h3 className="text-base md:text-xl font-display mb-4 md:mb-8 flex items-center gap-3 md:gap-4 text-white">
+                      <div className="bg-accent/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><Zap className="w-4 h-4 md:w-6 md:h-6 text-accent animate-bounce" /></div>
                       Intensité du Calcul
                     </h3>
-                    <div className="flex gap-3 md:gap-4">
+                    <div className="flex gap-2 md:gap-4">
                       {(['easy', 'medium', 'hard'] as Difficulty[]).map((d) => (
                         <button
                           key={d}
                           onClick={() => setDifficulty(d)}
                           className={`
-                            flex-1 py-3 md:py-4 rounded-xl md:rounded-2xl border transition-all text-xs md:text-sm font-bold
+                            flex-1 py-2.5 md:py-4 rounded-xl md:rounded-2xl border transition-all text-[10px] md:text-sm font-bold
                             ${difficulty === d 
                               ? 'border-accent bg-accent/20 text-accent shadow-[0_0_20px_rgba(16,185,129,0.3)]' 
                               : 'border-white/5 hover:border-white/20 text-slate-500'}
@@ -421,34 +421,34 @@ export default function App() {
 
               {/* Operations Grid */}
               <section>
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 md:mb-12 px-2 md:px-6 gap-4">
-                  <h3 className="text-2xl md:text-3xl font-display flex items-center gap-4 text-white">
-                    <div className="bg-primary/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><TrophyIcon className="w-6 h-6 md:w-7 md:h-7 text-primary animate-pulse" /></div>
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 md:mb-12 px-2 md:px-6 gap-2 md:gap-4">
+                  <h3 className="text-xl md:text-3xl font-display flex items-center gap-3 md:gap-4 text-white">
+                    <div className="bg-primary/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><TrophyIcon className="w-5 h-5 md:w-7 md:h-7 text-primary animate-pulse" /></div>
                     Protocoles d'Entraînement
                   </h3>
                   <div className="text-[8px] md:text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">Sélectionne un module</div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
                   {/* External Game Button */}
                   <motion.button
                     whileHover={{ y: -10, scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleExternalRedirect}
-                    className="group relative bg-indigo-600 p-6 md:p-10 rounded-2xl md:rounded-[3.5rem] shadow-2xl shadow-indigo-500/20 border-none text-left overflow-hidden text-white"
+                    className="group relative bg-indigo-600 p-4 md:p-10 rounded-2xl md:rounded-[3.5rem] shadow-2xl shadow-indigo-500/20 border-none text-left overflow-hidden text-white col-span-2 sm:col-span-1"
                   >
-                    <div className="w-12 h-12 md:w-20 md:h-20 bg-white/10 rounded-xl md:rounded-3xl flex items-center justify-center mb-4 md:mb-8 backdrop-blur-md group-hover:scale-110 transition-transform border border-white/20">
-                      <span className="text-2xl md:text-4xl">🦆</span>
+                    <div className="w-10 h-10 md:w-20 md:h-20 bg-white/10 rounded-xl md:rounded-3xl flex items-center justify-center mb-3 md:mb-8 backdrop-blur-md group-hover:scale-110 transition-transform border border-white/20">
+                      <span className="text-xl md:text-4xl">🦆</span>
                     </div>
-                    <h3 className="text-lg md:text-2xl font-display mb-2 md:mb-3">Duck Protocol</h3>
-                    <p className="text-indigo-100/60 text-[10px] md:text-sm mb-4 md:mb-8 leading-relaxed">
-                      Accède à la simulation externe pour un entraînement intensif aux tables de multiplication.
+                    <h3 className="text-base md:text-2xl font-display mb-1 md:mb-3">Duck Protocol</h3>
+                    <p className="text-indigo-100/60 text-[9px] md:text-sm mb-3 md:mb-8 leading-relaxed">
+                      Entraînement intensif aux tables de multiplication.
                     </p>
-                    <div className="flex items-center gap-3 font-bold text-[10px] md:text-xs uppercase tracking-widest">
-                      Lancer la liaison <ArrowRight className="w-4 h-4" />
+                    <div className="flex items-center gap-2 md:gap-3 font-bold text-[8px] md:text-xs uppercase tracking-widest">
+                      Lancer <ArrowRight className="w-3 h-3 md:w-4 md:h-4" />
                     </div>
                     <div className="absolute -bottom-10 -right-10 opacity-10 group-hover:opacity-20 transition-opacity">
-                      <BrainCircuit className="w-32 h-32 md:w-40 md:h-40" />
+                      <BrainCircuit className="w-24 h-24 md:w-40 md:h-40" />
                     </div>
                   </motion.button>
 
@@ -462,19 +462,19 @@ export default function App() {
                       whileHover={{ y: -10, scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => startGame(mode.id as Operation)}
-                      className="group relative glass-card p-6 md:p-10 rounded-2xl md:rounded-[3.5rem] text-left overflow-hidden"
+                      className="group relative glass-card p-4 md:p-10 rounded-2xl md:rounded-[3.5rem] text-left overflow-hidden"
                     >
-                      <div className={`w-10 h-10 md:w-16 md:h-16 ${mode.color} rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-8 shadow-lg ${mode.shadow} group-hover:scale-110 transition-transform`}>
-                        <mode.icon className="w-5 h-5 md:w-8 md:h-8 text-white" />
+                      <div className={`w-8 h-8 md:w-16 md:h-16 ${mode.color} rounded-lg md:rounded-2xl flex items-center justify-center mb-3 md:mb-8 shadow-lg ${mode.shadow} group-hover:scale-110 transition-transform`}>
+                        <mode.icon className="w-4 h-4 md:w-8 md:h-8 text-white" />
                       </div>
-                      <h3 className="text-lg md:text-2xl font-display mb-1 md:mb-3 text-white flex items-center gap-2">
+                      <h3 className="text-sm md:text-2xl font-display mb-1 md:mb-3 text-white flex items-center gap-2">
                         {mode.name}
                       </h3>
-                      <p className="text-slate-500 text-[10px] md:text-xs leading-relaxed uppercase tracking-wider">
-                        {mode.id === 'mixed' ? 'Analyse globale du programme.' : `Optimisation des ${mode.name.toLowerCase()}.`}
+                      <p className="text-slate-500 text-[8px] md:text-xs leading-relaxed uppercase tracking-wider">
+                        {mode.id === 'mixed' ? 'Analyse globale.' : `Optimisation.`}
                       </p>
                       <div className="absolute -bottom-6 -right-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity text-white">
-                        <mode.icon className="w-24 h-24 md:w-32 md:h-32" />
+                        <mode.icon className="w-16 h-16 md:w-32 md:h-32" />
                       </div>
                     </motion.button>
                   ))}

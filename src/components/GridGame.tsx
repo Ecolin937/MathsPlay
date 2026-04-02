@@ -114,13 +114,13 @@ export const GridGame: React.FC<GridGameProps> = ({ difficulty, grade, operation
           <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
         </button>
         <div className="flex gap-2 md:gap-4">
-          <div className="glass-card px-4 md:px-6 py-1.5 md:py-2 rounded-full border-white/5 flex items-center gap-2 md:gap-3">
+          <div className="glass-card px-3 md:px-6 py-1.5 md:py-2 rounded-full border-white/5 flex items-center gap-2 md:gap-3">
             <Timer className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-            <span className="font-bold text-white text-base md:text-lg">{timeLeft}s</span>
+            <span className="font-bold text-white text-sm md:text-lg">{timeLeft}s</span>
           </div>
-          <div className="glass-card px-4 md:px-6 py-1.5 md:py-2 rounded-full border-white/5 flex items-center gap-2 md:gap-3">
+          <div className="glass-card px-3 md:px-6 py-1.5 md:py-2 rounded-full border-white/5 flex items-center gap-2 md:gap-3">
             <Zap className="w-4 h-4 md:w-5 md:h-5 text-yellow-500" />
-            <span className="font-bold text-white text-base md:text-lg">{score}</span>
+            <span className="font-bold text-white text-sm md:text-lg">{score}</span>
           </div>
         </div>
       </div>
@@ -128,11 +128,11 @@ export const GridGame: React.FC<GridGameProps> = ({ difficulty, grade, operation
       <div className="glass-card rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-10 border-white/5 mb-6 md:mb-10 text-center relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-accent opacity-50" />
         <div className="flex items-center justify-center gap-2 md:gap-3 text-slate-500 mb-1 md:mb-4">
-          <Target size={14} className="text-primary md:w-[18px] md:h-[18px]" />
-          <span className="text-[8px] md:text-[10px] uppercase font-bold tracking-[0.2em] md:tracking-[0.4em]">Cible de la Matrice :</span>
+          <Target size={12} className="text-primary md:w-[18px] md:h-[18px]" />
+          <span className="text-[7px] md:text-[10px] uppercase font-bold tracking-[0.2em] md:tracking-[0.4em]">Cible de la Matrice :</span>
         </div>
-        <h3 className="text-2xl md:text-5xl font-display text-white mb-3 md:mb-6">{target?.text}</h3>
-        <div className="flex justify-center gap-2 md:gap-3">
+        <h3 className="text-xl md:text-5xl font-display text-white mb-2 md:mb-6">{target?.text}</h3>
+        <div className="flex justify-center gap-1.5 md:gap-3">
           {[1, 2, 3].map(i => (
             <motion.div 
               key={i} 
@@ -141,7 +141,7 @@ export const GridGame: React.FC<GridGameProps> = ({ difficulty, grade, operation
                 scale: i <= foundCount ? [1, 1.2, 1] : 1,
                 backgroundColor: i <= foundCount ? '#6366f1' : 'rgba(255,255,255,0.05)'
               }}
-              className="w-3 h-3 md:w-4 md:h-4 rounded-full border border-white/10" 
+              className="w-2.5 h-2.5 md:w-4 md:h-4 rounded-full border border-white/10" 
             />
           ))}
         </div>

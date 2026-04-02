@@ -322,12 +322,12 @@ const MobileNavBtn = ({ active, icon, onClick }: any) => (
 );
 
 const StatCard = ({ label, value, icon }: any) => (
-  <div className="glass-card p-4 md:p-6 rounded-2xl md:rounded-3xl border-white/5">
+  <div className="glass-card p-3 md:p-6 rounded-xl md:rounded-3xl border-white/5">
     <div className="flex items-center justify-between mb-1 md:mb-2">
-      <span className="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest">{label}</span>
-      {icon}
+      <span className="text-[8px] md:text-xs font-bold text-slate-500 uppercase tracking-widest">{label}</span>
+      {React.cloneElement(icon as any, { className: "w-3 h-3 md:w-5 md:h-5" })}
     </div>
-    <div className="text-2xl md:text-3xl font-display text-white">{value}</div>
+    <div className="text-lg md:text-3xl font-display text-white">{value}</div>
   </div>
 );
 
@@ -424,9 +424,9 @@ const ProfToolContent = ({ selectedProfTool, setSelectedProfTool, onSave }: any)
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto pr-1 md:pr-2 custom-scrollbar">
         {!selectedProfTool ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 pb-8">
             {[
               { name: "Générateur de Devoirs", icon: <FileEdit /> },
               { name: "Calculatrice", icon: <Calculator /> },
@@ -448,12 +448,12 @@ const ProfToolContent = ({ selectedProfTool, setSelectedProfTool, onSave }: any)
               <button 
                 key={i} 
                 onClick={() => setSelectedProfTool(tool.name)}
-                className="glass-card p-6 rounded-3xl border-white/5 hover:border-primary/30 transition-all text-left group"
+                className="glass-card p-3 md:p-6 rounded-xl md:rounded-3xl border-white/5 hover:border-primary/30 transition-all text-left group"
               >
-                <div className="bg-white/5 p-3 rounded-xl w-fit mb-4 group-hover:bg-primary/20 transition-colors">
-                  {React.cloneElement(tool.icon as any, { className: "w-5 h-5 text-slate-400 group-hover:text-primary" })}
+                <div className="bg-white/5 p-1.5 md:p-3 rounded-lg md:rounded-xl w-fit mb-2 md:mb-4 group-hover:bg-primary/20 transition-colors">
+                  {React.cloneElement(tool.icon as any, { className: "w-4 h-4 md:w-5 md:h-5 text-slate-400 group-hover:text-primary" })}
                 </div>
-                <span className="text-white font-medium text-sm">{tool.name}</span>
+                <span className="text-white font-medium text-[10px] md:text-sm leading-tight">{tool.name}</span>
               </button>
             ))}
           </div>
@@ -663,16 +663,16 @@ const GradeManager = () => {
   const average = grades.length > 0 ? (grades.reduce((a, b) => a + b, 0) / grades.length).toFixed(2) : 0;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div className="glass-card p-8 rounded-[2.5rem] border-white/5">
-        <h4 className="text-xl font-display text-white mb-6">Saisie des Notes (/20)</h4>
-        <div className="flex gap-2 mb-6">
-          <input type="number" value={newGrade} onChange={e => setNewGrade(e.target.value)} onKeyDown={e => e.key === 'Enter' && addGrade()} placeholder="Note..." className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 text-white" />
-          <button onClick={addGrade} className="bg-primary p-3 rounded-xl text-white"><Plus /></button>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+      <div className="glass-card p-5 md:p-8 rounded-2xl md:rounded-[2.5rem] border-white/5">
+        <h4 className="text-lg md:text-xl font-display text-white mb-4 md:mb-6">Saisie des Notes (/20)</h4>
+        <div className="flex gap-2 mb-4 md:mb-6">
+          <input type="number" value={newGrade} onChange={e => setNewGrade(e.target.value)} onKeyDown={e => e.key === 'Enter' && addGrade()} placeholder="Note..." className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm" />
+          <button onClick={addGrade} className="bg-primary p-3 rounded-xl text-white"><Plus className="w-5 h-5" /></button>
         </div>
         <div className="flex flex-wrap gap-2">
           {grades.map((g, i) => (
-            <div key={i} className="bg-white/5 px-4 py-2 rounded-full text-sm text-slate-300 flex items-center gap-2">
+            <div key={i} className="bg-white/5 px-3 py-1.5 rounded-full text-[10px] md:text-sm text-slate-300 flex items-center gap-2">
               {g} <button onClick={() => setGrades(grades.filter((_, idx) => idx !== i))} className="text-rose-500">×</button>
             </div>
           ))}

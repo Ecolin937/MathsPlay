@@ -116,20 +116,20 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
 
   return (
     <div className="max-w-3xl mx-auto w-full">
-      <div className="flex items-center justify-between mb-8 md:mb-12">
+      <div className="flex items-center justify-between mb-6 md:mb-12">
         <button onClick={onBack} className="p-2 md:p-3 hover:bg-white/10 rounded-xl md:rounded-2xl transition-colors text-slate-400">
           <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
         </button>
         
-        <div className="flex items-center gap-2 md:gap-6">
+        <div className="flex items-center gap-3 md:gap-6">
           <div className="text-right">
-            <p className="text-[8px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Question</p>
-            <p className="text-lg md:text-2xl font-display text-white">{stats.totalQuestions + 1} <span className="text-slate-600 text-[10px] md:text-sm">/ {TOTAL_QUESTIONS}</span></p>
+            <p className="text-[7px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-0.5">Question</p>
+            <p className="text-base md:text-2xl font-display text-white">{stats.totalQuestions + 1} <span className="text-slate-600 text-[8px] md:text-sm">/ {TOTAL_QUESTIONS}</span></p>
           </div>
           <div className="w-px h-4 md:h-8 bg-white/10" />
           <div className="text-left">
-            <p className="text-[8px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Score</p>
-            <p className="text-lg md:text-2xl font-display text-primary">{stats.score}</p>
+            <p className="text-[7px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-0.5">Score</p>
+            <p className="text-base md:text-2xl font-display text-primary">{stats.score}</p>
           </div>
         </div>
       </div>
@@ -148,7 +148,7 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
           )}
         </AnimatePresence>
 
-        <div className="glass-card rounded-2xl md:rounded-[3.5rem] p-6 md:p-16 text-center relative overflow-hidden border-white/5">
+        <div className="glass-card rounded-2xl md:rounded-[3.5rem] p-5 md:p-16 text-center relative overflow-hidden border-white/5 min-h-[160px] md:min-h-0 flex flex-col items-center justify-center">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-accent opacity-50" />
           <AnimatePresence mode="wait">
             <motion.div
@@ -158,11 +158,11 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
               exit={{ opacity: 0, y: -20 }}
               className="relative z-10"
             >
-              <span className="text-[8px] md:text-xs font-bold text-primary uppercase tracking-[0.4em] mb-2 md:mb-6 block opacity-60">Calcul en cours</span>
+              <span className="text-[7px] md:text-xs font-bold text-primary uppercase tracking-[0.4em] mb-1 md:mb-6 block opacity-60">Calcul en cours</span>
               <h3 className={`font-display tracking-tighter text-white ${
                 question?.text && question.text.length > 15 
-                  ? 'text-2xl sm:text-3xl md:text-6xl' 
-                  : 'text-4xl sm:text-5xl md:text-9xl'
+                  ? 'text-xl sm:text-3xl md:text-6xl' 
+                  : 'text-3xl sm:text-5xl md:text-9xl'
               }`}>
                 {question?.text}
               </h3>
@@ -193,7 +193,7 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 md:gap-6">
+      <div className="grid grid-cols-2 gap-2 md:gap-6">
         {question?.options.map((option, idx) => (
           <motion.button
             key={`${question.id}-${idx}`}
@@ -202,7 +202,7 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
             onClick={() => handleAnswer(option)}
             disabled={!!feedback}
             className={`
-              p-4 md:p-8 rounded-xl md:rounded-[2rem] text-xl md:text-4xl font-display transition-all border
+              p-3 md:p-8 rounded-xl md:rounded-[2rem] text-lg md:text-4xl font-display transition-all border
               ${feedback === 'correct' && option === question.answer ? 'bg-accent/20 text-accent border-accent shadow-[0_0_30px_rgba(16,185,129,0.2)]' : 
                 feedback === 'wrong' && option === question.answer ? 'bg-accent/20 text-accent border-accent' :
                 feedback === 'wrong' && option === (question.options.find(o => o === option)) ? 'bg-rose-500/20 text-rose-500 border-rose-500 shadow-[0_0_30px_rgba(244,63,94,0.2)]' :

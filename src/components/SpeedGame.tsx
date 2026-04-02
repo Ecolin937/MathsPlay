@@ -110,18 +110,18 @@ export const SpeedGame: React.FC<SpeedGameProps> = ({ difficulty, grade, operati
           <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
         </button>
         <div className="flex gap-2 md:gap-4">
-          <div className="glass-card px-4 md:px-6 py-1.5 md:py-2 rounded-full border-white/5 flex items-center gap-2 md:gap-3">
+          <div className="glass-card px-3 md:px-6 py-1.5 md:py-2 rounded-full border-white/5 flex items-center gap-2 md:gap-3">
             <Timer className={`w-4 h-4 md:w-5 md:h-5 ${timeLeft < 5 ? 'text-rose-500 animate-pulse' : 'text-primary'}`} />
-            <span className="font-bold text-white text-base md:text-lg">{timeLeft}s</span>
+            <span className="font-bold text-white text-sm md:text-lg">{timeLeft}s</span>
           </div>
-          <div className="glass-card px-4 md:px-6 py-1.5 md:py-2 rounded-full border-white/5 flex items-center gap-2 md:gap-3">
+          <div className="glass-card px-3 md:px-6 py-1.5 md:py-2 rounded-full border-white/5 flex items-center gap-2 md:gap-3">
             <Zap className="w-4 h-4 md:w-5 md:h-5 text-yellow-500" />
-            <span className="font-bold text-white text-base md:text-lg">{score}</span>
+            <span className="font-bold text-white text-sm md:text-lg">{score}</span>
           </div>
         </div>
       </div>
 
-      <div className="glass-card rounded-[2.5rem] md:rounded-[3.5rem] p-8 md:p-16 text-center mb-6 md:mb-12 min-h-[250px] md:min-h-[350px] flex flex-col justify-center relative overflow-hidden border-white/5">
+      <div className="glass-card rounded-[1.5rem] md:rounded-[3.5rem] p-6 md:p-16 text-center mb-6 md:mb-12 min-h-[200px] md:min-h-[350px] flex flex-col justify-center relative overflow-hidden border-white/5">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-accent opacity-50" />
         <AnimatePresence mode="wait">
           <motion.div
@@ -130,13 +130,13 @@ export const SpeedGame: React.FC<SpeedGameProps> = ({ difficulty, grade, operati
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
-            <span className="text-[10px] md:text-xs font-bold text-primary uppercase tracking-[0.3em] md:tracking-[0.4em] mb-4 md:mb-6 block opacity-60">Vérification de donnée</span>
-            <h3 className={`font-display mb-4 md:mb-6 text-white ${
+            <span className="text-[8px] md:text-xs font-bold text-primary uppercase tracking-[0.3em] md:tracking-[0.4em] mb-2 md:mb-6 block opacity-60">Vérification de donnée</span>
+            <h3 className={`font-display mb-2 md:mb-6 text-white ${
               currentTask?.text && currentTask.text.length > 15 
                 ? 'text-xl sm:text-2xl md:text-4xl' 
-                : 'text-3xl sm:text-4xl md:text-6xl'
+                : 'text-2xl sm:text-4xl md:text-6xl'
             }`}>{currentTask?.text}</h3>
-            <div className="text-4xl sm:text-5xl md:text-7xl font-display text-primary tracking-tighter">
+            <div className="text-3xl sm:text-5xl md:text-7xl font-display text-primary tracking-tighter">
               = {currentTask?.displayValue}
             </div>
           </motion.div>
@@ -148,29 +148,29 @@ export const SpeedGame: React.FC<SpeedGameProps> = ({ difficulty, grade, operati
             animate={{ scale: 1.5, opacity: 0.2 }} 
             className={`absolute inset-0 flex items-center justify-center pointer-events-none ${feedback === 'correct' ? 'text-accent' : 'text-rose-500'}`}
           >
-            {feedback === 'correct' ? <Check size={100} className="md:w-[150px] md:h-[150px]" strokeWidth={3} /> : <X size={100} className="md:w-[150px] md:h-[150px]" strokeWidth={3} />}
+            {feedback === 'correct' ? <Check size={80} className="md:w-[150px] md:h-[150px]" strokeWidth={3} /> : <X size={80} className="md:w-[150px] md:h-[150px]" strokeWidth={3} />}
           </motion.div>
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 md:gap-8">
+      <div className="grid grid-cols-2 gap-3 md:gap-8">
         <motion.button 
           whileHover={{ scale: 1.05, y: -4 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => handleChoice(false)}
-          className="bg-rose-500/10 text-rose-500 p-6 md:p-10 rounded-[1.5rem] md:rounded-[2.5rem] border border-rose-500/20 shadow-[0_0_30px_rgba(244,63,94,0.1)] transition-all flex flex-col items-center gap-2 md:gap-4 hover:bg-rose-500/20"
+          className="bg-rose-500/10 text-rose-500 p-4 md:p-10 rounded-xl md:rounded-[2.5rem] border border-rose-500/20 shadow-[0_0_30px_rgba(244,63,94,0.1)] transition-all flex flex-col items-center gap-2 md:gap-4 hover:bg-rose-500/20"
         >
-          <X className="w-8 h-8 md:w-12 md:h-12" />
-          <span className="font-bold uppercase tracking-[0.1em] md:tracking-[0.2em] text-xs md:text-sm">Faux</span>
+          <X className="w-6 h-6 md:w-12 md:h-12" />
+          <span className="font-bold uppercase tracking-[0.1em] md:tracking-[0.2em] text-[10px] md:text-sm">Faux</span>
         </motion.button>
         <motion.button 
           whileHover={{ scale: 1.05, y: -4 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => handleChoice(true)}
-          className="bg-accent/10 text-accent p-6 md:p-10 rounded-[1.5rem] md:rounded-[2.5rem] border border-accent/20 shadow-[0_0_30px_rgba(16,185,129,0.1)] transition-all flex flex-col items-center gap-2 md:gap-4 hover:bg-accent/20"
+          className="bg-accent/10 text-accent p-4 md:p-10 rounded-xl md:rounded-[2.5rem] border border-accent/20 shadow-[0_0_30px_rgba(16,185,129,0.1)] transition-all flex flex-col items-center gap-2 md:gap-4 hover:bg-accent/20"
         >
-          <Check className="w-8 h-8 md:w-12 md:h-12" />
-          <span className="font-bold uppercase tracking-[0.1em] md:tracking-[0.2em] text-xs md:text-sm">Vrai</span>
+          <Check className="w-6 h-6 md:w-12 md:h-12" />
+          <span className="font-bold uppercase tracking-[0.1em] md:tracking-[0.2em] text-[10px] md:text-sm">Vrai</span>
         </motion.button>
       </div>
     </div>
