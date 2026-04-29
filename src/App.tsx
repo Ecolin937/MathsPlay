@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout } from 'lucide-react';
+import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer } from 'lucide-react';
 import { MathGame } from './components/MathGame';
 import { SpeedGame } from './components/SpeedGame';
 import { GridGame } from './components/GridGame';
@@ -70,6 +70,14 @@ export default function App() {
   const [showCreatorBanner, setShowCreatorBanner] = useState(false);
   const [showPoweredBy, setShowPoweredBy] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [showUpdateModal, setShowUpdateModal] = useState(true);
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowWelcomeNotif(true), 3000);
@@ -190,7 +198,106 @@ export default function App() {
         />
       </div>
 
+      {/* Clock and Date Display */}
+      <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[1100] flex flex-col items-end gap-1">
+        <div className="glass px-4 py-2 rounded-2xl border-white/10 flex items-center gap-3 shadow-lg">
+          <Timer className="w-4 h-4 text-primary animate-pulse" />
+          <span className="text-white font-mono font-bold text-sm md:text-lg">
+            {currentTime.toLocaleTimeString('fr-FR')}
+          </span>
+        </div>
+        <div className="glass px-3 py-1 rounded-xl border-white/5 text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-widest whitespace-nowrap">
+          {currentTime.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+        </div>
+      </div>
+
       <AnimatePresence>
+        {showUpdateModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[1000] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4"
+          >
+            {/* Visual Arrows pointing to top-right */}
+            <div className="fixed top-20 right-4 md:top-32 md:right-32 z-[1001] pointer-events-none flex flex-col items-end gap-8 md:gap-16">
+              <motion.div 
+                animate={{ 
+                  x: [0, 8, 0],
+                  y: [0, -8, 0],
+                  opacity: [0.5, 1, 0.5]
+                }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="flex items-center gap-2"
+              >
+                <span className="text-primary font-bold uppercase tracking-widest text-[8px] md:text-xs">L'heure ici</span>
+                <ArrowRight className="w-10 h-10 md:w-16 md:h-16 text-primary -rotate-45" />
+              </motion.div>
+              
+              <motion.div 
+                animate={{ 
+                  x: [0, 8, 0],
+                  y: [0, -8, 0],
+                  opacity: [0.4, 0.8, 0.4]
+                }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
+                className="flex items-center gap-2"
+              >
+                <span className="text-secondary font-bold uppercase tracking-widest text-[8px] md:text-xs">La date ici</span>
+                <ArrowRight className="w-10 h-10 md:w-16 md:h-16 text-secondary -rotate-45" />
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="glass-card p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] max-w-lg w-full relative border-primary/30 shadow-[0_0_50px_rgba(99,102,241,0.2)]"
+            >
+              <div className="absolute -top-6 -right-6 bg-primary p-4 rounded-3xl shadow-xl rotate-12">
+                <Sparkles className="text-white w-8 h-8" />
+              </div>
+
+              <h2 className="text-4xl md:text-5xl font-display text-white mb-2 tracking-tighter leading-none">
+                UPDATE <span className="text-primary italic">9</span>
+              </h2>
+              <p className="text-primary font-bold uppercase tracking-widest text-xs mb-8">Changements :</p>
+              
+              <div className="space-y-6 mb-10">
+                <div className="flex items-start gap-4">
+                  <div className="bg-primary/20 p-2 rounded-xl mt-1">
+                    <Timer className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-lg">Heure en direct</h3>
+                    <p className="text-slate-400 text-sm">Vous pouvez voir quelle heure il est en haut à droite.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="bg-secondary/20 p-2 rounded-xl mt-1">
+                    <BookOpen className="w-5 h-5 text-secondary" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-lg">Date du jour</h3>
+                    <p className="text-slate-400 text-sm">Vous pouvez voir la date du jour juste en dessous.</p>
+                  </div>
+                </div>
+
+                <div className="bg-white/5 p-4 rounded-2xl border border-white/10 italic text-slate-400 text-xs flex items-center gap-3">
+                  <div className="h-8 w-1 bg-primary rounded-full" />
+                  Regardez les flèches animées pour localiser ces nouveaux modules !
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowUpdateModal(false)}
+                className="w-full py-5 bg-primary text-white rounded-2xl font-bold text-lg shadow-[0_0_30px_rgba(99,102,241,0.3)] hover:scale-105 transition-all flex items-center justify-center gap-3 group"
+              >
+                Fermer l'Annonce <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
 
       <AnimatePresence>
