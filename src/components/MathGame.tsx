@@ -116,7 +116,7 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
 
   return (
     <div className="max-w-3xl mx-auto w-full">
-      <div className="flex items-center justify-between mb-6 md:mb-12">
+      <div className="flex items-center justify-between mb-6 md:mb-12 pt-14 md:pt-0">
         <button onClick={onBack} className="p-2 md:p-3 hover:bg-white/10 rounded-xl md:rounded-2xl transition-colors text-slate-400">
           <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
         </button>

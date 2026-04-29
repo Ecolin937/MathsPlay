@@ -199,8 +199,8 @@ export default function App() {
       </div>
 
       {/* Clock and Date Display */}
-      <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[1100] flex flex-col items-end gap-1">
-        <div className="glass px-4 py-2 rounded-2xl border-white/10 flex items-center gap-3 shadow-lg">
+      <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[50] flex flex-col items-end gap-1 pointer-events-none sm:pointer-events-auto">
+        <div className="glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border-white/10 flex items-center gap-2 md:gap-3 shadow-lg scale-90 md:scale-100 origin-right">
           <Timer className="w-4 h-4 text-primary animate-pulse" />
           <span className="text-white font-mono font-bold text-sm md:text-lg">
             {currentTime.toLocaleTimeString('fr-FR')}
@@ -220,31 +220,31 @@ export default function App() {
             className="fixed inset-0 z-[1000] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4"
           >
             {/* Visual Arrows pointing to top-right */}
-            <div className="fixed top-20 right-4 md:top-32 md:right-32 z-[1001] pointer-events-none flex flex-col items-end gap-8 md:gap-16">
+            <div className="fixed top-20 right-4 md:top-32 md:right-32 z-[1001] pointer-events-none flex flex-col items-end gap-6 md:gap-16">
               <motion.div 
                 animate={{ 
-                  x: [0, 8, 0],
-                  y: [0, -8, 0],
-                  opacity: [0.5, 1, 0.5]
+                  x: [0, 6, -3, 0],
+                  y: [0, -6, 3, 0],
+                  opacity: [0.6, 1, 0.8, 1]
                 }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+                transition={{ duration: 2, repeat: Infinity }}
                 className="flex items-center gap-2"
               >
                 <span className="text-primary font-bold uppercase tracking-widest text-[8px] md:text-xs">L'heure ici</span>
-                <ArrowRight className="w-10 h-10 md:w-16 md:h-16 text-primary -rotate-45" />
+                <ArrowRight className="w-8 h-8 md:w-16 md:h-16 text-primary -rotate-[45deg]" />
               </motion.div>
               
               <motion.div 
                 animate={{ 
-                  x: [0, 8, 0],
-                  y: [0, -8, 0],
-                  opacity: [0.4, 0.8, 0.4]
+                  x: [0, 6, -3, 0],
+                  y: [0, -6, 3, 0],
+                  opacity: [0.5, 0.9, 0.7, 0.9]
                 }}
-                transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
+                transition={{ duration: 2.2, repeat: Infinity, delay: 0.3 }}
                 className="flex items-center gap-2"
               >
                 <span className="text-secondary font-bold uppercase tracking-widest text-[8px] md:text-xs">La date ici</span>
-                <ArrowRight className="w-10 h-10 md:w-16 md:h-16 text-secondary -rotate-45" />
+                <ArrowRight className="w-8 h-8 md:w-16 md:h-16 text-secondary -rotate-[45deg]" />
               </motion.div>
             </div>
 
@@ -342,7 +342,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto px-3 md:px-8 py-4 md:py-8">
+      <div className="max-w-7xl mx-auto px-3 md:px-8 py-4 md:py-8 min-h-screen flex flex-col">
         <AnimatePresence mode="wait">
           {gameState === 'home' ? (
             <motion.div
@@ -350,7 +350,7 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="space-y-8 md:space-y-16"
+              className="space-y-8 md:space-y-16 flex-1"
             >
               {/* Hero Section */}
               <section className="relative pt-4 md:pt-12 pb-8 md:pb-20 text-center lg:text-left grid lg:grid-cols-2 gap-8 md:gap-12 items-center">

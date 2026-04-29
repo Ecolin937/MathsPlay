@@ -408,7 +408,7 @@ const ProfToolContent = ({ selectedProfTool, setSelectedProfTool, onSave }: any)
   };
 
   return (
-    <div className="space-y-8 h-full flex flex-col">
+    <div className="space-y-8 h-full flex flex-col pt-16 md:pt-0">
       <div className="flex items-center justify-between shrink-0">
         <h3 className="text-3xl font-display text-white">
           {selectedProfTool ? (

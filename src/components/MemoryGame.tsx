@@ -101,7 +101,7 @@ export const MemoryGame: React.FC<MemoryGameProps> = ({ difficulty, grade, opera
 
   return (
     <div className="min-h-screen p-2 md:p-8 flex flex-col items-center">
-      <div className="w-full max-w-4xl flex items-center justify-between mb-4 md:mb-8 px-2">
+      <div className="w-full max-w-4xl flex items-center justify-between mb-4 md:mb-8 px-2 pt-16 md:pt-0">
         <button onClick={onBack} className="p-2 md:p-3 glass rounded-xl md:rounded-2xl hover:bg-white/10 transition-all text-white">
           <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
         </button>

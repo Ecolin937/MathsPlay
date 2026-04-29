@@ -104,7 +104,7 @@ export const SpeedGame: React.FC<SpeedGameProps> = ({ difficulty, grade, operati
   }
 
   return (
-    <div className="max-w-xl mx-auto w-full px-4 md:px-0">
+    <div className="max-w-xl mx-auto w-full px-4 md:px-0 pt-16 md:pt-0">
       <div className="flex justify-between items-center mb-6 md:mb-12">
         <button onClick={onBack} className="p-2 md:p-3 hover:bg-white/10 rounded-xl md:rounded-2xl transition-colors text-slate-400">
           <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />

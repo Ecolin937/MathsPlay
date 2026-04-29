@@ -72,7 +72,7 @@ export const PatternGame: React.FC<PatternGameProps> = ({ difficulty, grade, onB
 
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center">
-      <div className="w-full max-w-2xl flex items-center justify-between mb-8 md:mb-12">
+      <div className="w-full max-w-2xl flex items-center justify-between mb-8 md:mb-12 pt-16 md:pt-0">
         <button onClick={onBack} className="p-2 md:p-3 glass rounded-xl md:rounded-2xl hover:bg-white/10 transition-all text-white">
           <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
         </button>
