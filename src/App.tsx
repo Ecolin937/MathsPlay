@@ -11,6 +11,21 @@ import { Difficulty, Operation, Grade } from './types';
 
 type GameMode = 'classic' | 'speed' | 'grid' | 'memory' | 'pattern';
 
+const Logo = ({ className = "" }: { className?: string }) => (
+  <div className={`flex items-center gap-2 md:gap-3 ${className}`}>
+    <div className="relative">
+      <div className="bg-primary p-2 md:p-3 rounded-xl md:rounded-2xl shadow-[0_0_20px_rgba(99,102,241,0.5)] rotate-3 group-hover:rotate-6 transition-transform">
+        <Sparkles className="w-5 h-5 md:w-8 md:h-8 text-white" />
+      </div>
+      <div className="absolute -top-1 -right-1 bg-secondary w-3 h-3 md:w-4 md:h-4 rounded-full border-2 border-background animate-pulse" />
+    </div>
+    <div className="flex flex-col leading-none">
+      <span className="text-xl md:text-3xl font-display text-white tracking-tighter">MATHS</span>
+      <span className="text-sm md:text-lg font-display text-primary italic tracking-widest uppercase">PLAY</span>
+    </div>
+  </div>
+);
+
 const FloatingShape = ({ delay, color, size, top, left }: { delay: number, color: string, size: string, top: string, left: string }) => (
   <motion.div
     animate={{
@@ -343,6 +358,11 @@ export default function App() {
       </AnimatePresence>
 
       <div className="max-w-7xl mx-auto px-3 md:px-8 py-4 md:py-8 min-h-screen flex flex-col">
+        {/* Navigation / Header Logo */}
+        <div className="fixed top-4 left-4 md:top-8 md:left-8 z-[50]">
+          <Logo />
+        </div>
+
         <AnimatePresence mode="wait">
           {gameState === 'home' ? (
             <motion.div
@@ -369,7 +389,7 @@ export default function App() {
                   </motion.div>
                   <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-9xl font-display mb-6 md:mb-8 tracking-tighter leading-[0.9] md:leading-[0.85] text-white">
                     Maths <br />
-                    <span className="neon-text italic">Interactives</span>
+                    <span className="neon-text italic">Play</span>
                   </h1>
                   <p className="text-slate-400 text-base md:text-xl max-w-xl mb-8 md:mb-10 leading-relaxed mx-auto lg:mx-0">
                     Maîtrise les concepts complexes avec des défis personnalisés.
@@ -588,12 +608,9 @@ export default function App() {
                 </div>
               </section>
 
-              <footer className="mt-20 md:mt-32 text-center border-t border-white/5 pt-12 md:pt-16 pb-12 md:pb-16">
+              <footer className="mt-20 md:mt-32 text-center border-t border-white/5 pt-12 md:pt-16 pb-12 md:pb-16 text-white font-display">
                 <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 mb-8">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/20 p-2 rounded-lg"><BrainCircuit className="w-5 h-5 md:w-6 md:h-6 text-primary" /></div>
-                    <span className="font-display text-xl md:text-2xl text-white tracking-tight">Math<span className="text-primary">OS</span></span>
-                  </div>
+                  <Logo className="scale-75 md:scale-90" />
                   <div className="h-px w-12 bg-white/10 hidden md:block" />
                   <p className="text-slate-500 text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-bold">Droits d'auteurs : Diego HAMON BAYARD</p>
                 </div>
