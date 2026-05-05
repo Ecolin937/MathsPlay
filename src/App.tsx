@@ -102,6 +102,17 @@ export default function App() {
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showUpdateModal, setShowUpdateModal] = useState(true);
+  const [showDiegoModal, setShowDiegoModal] = useState(false);
+  const [canCloseDiegoModal, setCanCloseDiegoModal] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowDiegoModal(true);
+      // Wait another 10 seconds before showing the close button
+      setTimeout(() => setCanCloseDiegoModal(true), 10000);
+    }, 60000); // 1 minute
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const tips = [
@@ -400,6 +411,82 @@ export default function App() {
               >
                 Fermer l'Annonce <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showDiegoModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="glass-card max-w-lg w-full p-8 md:p-12 rounded-[2.5rem] border-primary/20 shadow-[0_0_50px_rgba(99,102,241,0.2)] text-center relative overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-secondary" />
+              
+              <div className="bg-primary/20 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-8">
+                <Star className="w-10 h-10 text-primary animate-pulse" />
+              </div>
+
+              <h2 className="text-3xl font-display text-white mb-6 leading-tight uppercase tracking-tighter">
+                Information
+              </h2>
+              
+              <div className="space-y-6 text-slate-300">
+                <p className="text-lg font-medium text-white italic">
+                  "Merci d'utiliser ce service créé par Diego !"
+                </p>
+                
+                <div className="h-px w-12 bg-white/10 mx-auto" />
+                
+                <p className="text-slate-400">
+                  Chaque semaine, le site est actualisé avec de nouvelles fonctionnalités.
+                </p>
+
+                <div className="bg-primary/10 p-4 rounded-2xl border border-primary/20">
+                  <p className="text-white text-sm">
+                    🤝 <span className="font-bold text-primary">Diego</span> et <span className="font-bold text-primary">Antonio</span> en <span className="italic">6ème 3</span> vont faire un partenariat pour améliorer le site !
+                  </p>
+                </div>
+                
+                <div className="bg-accent/10 p-4 rounded-2xl border border-accent/20">
+                  <p className="text-accent text-sm font-bold uppercase tracking-widest mb-2">Prochain projet :</p>
+                  <p className="text-white text-sm">
+                    Transformer ce site internet en application installable depuis Windows 10, Windows 11, Android ou iOS !
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-10 min-h-[60px] flex items-center justify-center">
+                <AnimatePresence>
+                  {canCloseDiegoModal ? (
+                    <motion.button 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      onClick={() => setShowDiegoModal(false)}
+                      className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:scale-105 active:scale-95 transition-all shadow-xl"
+                    >
+                      Fermer
+                    </motion.button>
+                  ) : (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-slate-500 text-xs flex items-center gap-2"
+                    >
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Veuillez lire attentivement l'annonce...
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </motion.div>
           </motion.div>
         )}
