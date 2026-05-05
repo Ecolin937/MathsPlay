@@ -119,14 +119,14 @@ export const PatternGame: React.FC<PatternGameProps> = ({ difficulty, grade, onB
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 md:gap-4">
+        <div className="grid grid-cols-2 gap-4 md:gap-6">
           {options.map((opt, i) => (
             <motion.button
               key={i}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => handleAnswer(opt)}
-              className="py-3 md:py-6 glass rounded-xl md:rounded-2xl text-base md:text-xl font-bold text-white hover:bg-white/5 transition-all border-white/5"
+              className="py-5 md:py-8 glass rounded-2xl md:rounded-[2.5rem] text-xl md:text-3xl font-bold text-white hover:bg-white/5 transition-all border-white/10 active:scale-95"
             >
               {opt}
             </motion.button>

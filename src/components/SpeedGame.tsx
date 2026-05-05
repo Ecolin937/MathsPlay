@@ -164,24 +164,24 @@ export const SpeedGame: React.FC<SpeedGameProps> = ({ difficulty, grade, operati
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-3 md:gap-8">
+      <div className="grid grid-cols-2 gap-4 md:gap-8">
         <motion.button 
           whileHover={{ scale: 1.05, y: -4 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => handleChoice(false)}
-          className="bg-rose-500/10 text-rose-500 p-4 md:p-10 rounded-xl md:rounded-[2.5rem] border border-rose-500/20 shadow-[0_0_30px_rgba(244,63,94,0.1)] transition-all flex flex-col items-center gap-2 md:gap-4 hover:bg-rose-500/20"
+          className="bg-rose-500/10 text-rose-500 p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] border border-rose-500/20 shadow-[0_0_30px_rgba(244,63,94,0.1)] transition-all flex flex-col items-center justify-center gap-3 md:gap-4 hover:bg-rose-500/20 active:scale-95 min-h-[100px] md:min-h-[180px]"
         >
-          <X className="w-6 h-6 md:w-12 md:h-12" />
-          <span className="font-bold uppercase tracking-[0.1em] md:tracking-[0.2em] text-[10px] md:text-sm">Faux</span>
+          <X className="w-8 h-8 md:w-12 md:h-12" />
+          <span className="font-bold uppercase tracking-[0.1em] md:tracking-[0.2em] text-xs md:text-sm">Faux</span>
         </motion.button>
         <motion.button 
           whileHover={{ scale: 1.05, y: -4 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => handleChoice(true)}
-          className="bg-accent/10 text-accent p-4 md:p-10 rounded-xl md:rounded-[2.5rem] border border-accent/20 shadow-[0_0_30px_rgba(16,185,129,0.1)] transition-all flex flex-col items-center gap-2 md:gap-4 hover:bg-accent/20"
+          className="bg-accent/10 text-accent p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] border border-accent/20 shadow-[0_0_30px_rgba(16,185,129,0.1)] transition-all flex flex-col items-center justify-center gap-3 md:gap-4 hover:bg-accent/20 active:scale-95 min-h-[100px] md:min-h-[180px]"
         >
-          <Check className="w-6 h-6 md:w-12 md:h-12" />
-          <span className="font-bold uppercase tracking-[0.1em] md:tracking-[0.2em] text-[10px] md:text-sm">Vrai</span>
+          <Check className="w-8 h-8 md:w-12 md:h-12" />
+          <span className="font-bold uppercase tracking-[0.1em] md:tracking-[0.2em] text-xs md:text-sm">Vrai</span>
         </motion.button>
       </div>
     </div>

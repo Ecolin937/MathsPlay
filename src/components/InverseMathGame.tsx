@@ -147,10 +147,12 @@ export const InverseMathGame: React.FC<InverseMathGameProps> = ({ difficulty, gr
               <input
                 ref={inputRef}
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={userAnswer}
                 onChange={(e) => setUserAnswer(e.target.value)}
                 autoFocus
-                className={`w-full bg-white/5 border-2 rounded-3xl p-6 text-center text-4xl text-white outline-none transition-all ${
+                className={`w-full bg-white/5 border-2 rounded-[2rem] md:rounded-[3rem] p-8 md:p-10 text-center text-5xl md:text-7xl text-white outline-none transition-all ${
                   feedback === 'correct' ? 'border-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.3)]' :
                   feedback === 'wrong' ? 'border-rose-500 shadow-[0_0_30px_rgba(244,63,94,0.3)]' :
                   'border-white/10 focus:border-primary/50'

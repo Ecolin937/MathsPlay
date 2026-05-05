@@ -205,7 +205,7 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 md:gap-6">
+      <div className="grid grid-cols-2 gap-3 md:gap-6">
         {question?.options.map((option, idx) => (
           <motion.button
             key={`${question.id}-${idx}`}
@@ -214,7 +214,7 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
             onClick={() => handleAnswer(option)}
             disabled={!!feedback}
             className={`
-              p-3 md:p-8 rounded-xl md:rounded-[2rem] text-lg md:text-4xl font-display transition-all border
+              min-h-[80px] md:min-h-[140px] p-4 md:p-8 rounded-2xl md:rounded-[2rem] text-2xl md:text-4xl font-display transition-all border active:scale-95
               ${feedback === 'correct' && option === question.answer ? 'bg-accent/20 text-accent border-accent shadow-[0_0_30px_rgba(16,185,129,0.2)]' : 
                 feedback === 'wrong' && option === question.answer ? 'bg-accent/20 text-accent border-accent' :
                 feedback === 'wrong' && option === (question.options.find(o => o === option)) ? 'bg-rose-500/20 text-rose-500 border-rose-500 shadow-[0_0_30px_rgba(244,63,94,0.2)]' :

@@ -465,24 +465,24 @@ export default function App() {
                     <div className="bg-primary/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><Layout className="w-5 h-5 md:w-7 md:h-7 text-primary animate-pulse" /></div>
                     Interface de Simulation
                   </h3>
-                  <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6">
+                  <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
                     {gameStyles.map((style) => (
                       <button
                         key={style.id}
                         onClick={() => setGameMode(style.id as GameMode)}
                         className={`
-                          p-2.5 md:p-6 rounded-xl md:rounded-[2.5rem] border transition-all flex flex-col items-center gap-2 md:gap-5 text-center group relative overflow-hidden
+                          min-h-[100px] md:min-h-[160px] p-3 md:p-6 rounded-2xl md:rounded-[2.5rem] border transition-all flex flex-col items-center justify-center gap-2 md:gap-5 text-center group relative overflow-hidden active:scale-95
                           ${gameMode === style.id 
                             ? 'border-primary bg-primary/10 text-primary shadow-[0_0_30px_rgba(99,102,241,0.2)]' 
                             : 'border-white/5 hover:border-white/20 text-slate-500'}
                         `}
                       >
-                        <div className={`w-8 h-8 md:w-16 md:h-16 rounded-lg md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 ${gameMode === style.id ? 'bg-primary text-white shadow-[0_0_20px_rgba(99,102,241,0.5)]' : 'bg-slate-800'}`}>
-                          {React.cloneElement(style.icon as React.ReactElement, { className: "w-4 h-4 md:w-8 md:h-8" })}
+                        <div className={`w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 ${gameMode === style.id ? 'bg-primary text-white shadow-[0_0_20px_rgba(99,102,241,0.5)]' : 'bg-slate-800'}`}>
+                          {React.cloneElement(style.icon as React.ReactElement, { className: "w-5 h-5 md:w-8 md:h-8" })}
                         </div>
                         <div>
-                          <p className="font-bold text-[9px] md:text-sm tracking-tight">{style.name}</p>
-                          <p className="text-[6px] md:text-[10px] opacity-40 mt-0.5 md:mt-1 uppercase tracking-widest hidden sm:block">{style.desc}</p>
+                          <p className="font-bold text-[10px] md:text-sm tracking-tight">{style.name}</p>
+                          <p className="text-[7px] md:text-[10px] opacity-40 mt-0.5 md:mt-1 uppercase tracking-widest hidden sm:block">{style.desc}</p>
                         </div>
                         {gameMode === style.id && (
                           <motion.div layoutId="active-glow" className="absolute inset-0 bg-primary/5 -z-10" />
@@ -505,13 +505,13 @@ export default function App() {
                       <div className="bg-secondary/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><GraduationCap className="w-4 h-4 md:w-6 md:h-6 text-secondary animate-pulse" /></div>
                       Sélection du Niveau
                     </h3>
-                    <div className="grid grid-cols-3 gap-2 md:gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
                       {gradesList.map((g) => (
                         <button
                           key={g.id}
                           onClick={() => setGrade(g.id as Grade)}
                           className={`
-                            py-2.5 md:py-4 rounded-xl md:rounded-2xl border transition-all text-[10px] md:text-sm font-bold
+                            py-3.5 md:py-4 rounded-xl md:rounded-2xl border transition-all text-[11px] md:text-sm font-bold active:scale-95
                             ${grade === g.id 
                               ? 'border-secondary bg-secondary/20 text-secondary shadow-[0_0_20px_rgba(168,85,247,0.3)]' 
                               : 'border-white/5 hover:border-white/20 text-slate-500'}
@@ -528,13 +528,13 @@ export default function App() {
                       <div className="bg-accent/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><Zap className="w-4 h-4 md:w-6 md:h-6 text-accent animate-bounce" /></div>
                       Intensité du Calcul
                     </h3>
-                    <div className="flex gap-2 md:gap-4">
+                    <div className="flex flex-wrap gap-3 md:gap-4">
                       {(['easy', 'medium', 'hard'] as Difficulty[]).map((d) => (
                         <button
                           key={d}
                           onClick={() => setDifficulty(d)}
                           className={`
-                            flex-1 py-2.5 md:py-4 rounded-xl md:rounded-2xl border transition-all text-[10px] md:text-sm font-bold
+                            flex-1 min-w-[70px] py-3.5 md:py-4 rounded-xl md:rounded-2xl border transition-all text-[11px] md:text-sm font-bold active:scale-95
                             ${difficulty === d 
                               ? 'border-accent bg-accent/20 text-accent shadow-[0_0_20px_rgba(16,185,129,0.3)]' 
                               : 'border-white/5 hover:border-white/20 text-slate-500'}
