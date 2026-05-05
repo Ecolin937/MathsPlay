@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2 } from 'lucide-react';
+import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2, Bell, BellOff } from 'lucide-react';
 import { MathGame } from './components/MathGame';
 import { SpeedGame } from './components/SpeedGame';
 import { GridGame } from './components/GridGame';
@@ -76,6 +76,20 @@ export default function App() {
       if (granted) scheduleDailyNotification();
     });
   }, []);
+
+  const [hasNotifyPermission, setHasNotifyPermission] = useState(false);
+
+  useEffect(() => {
+    if ('Notification' in window) {
+      setHasNotifyPermission(Notification.permission === 'granted');
+    }
+  }, []);
+
+  const handleNotifyRequest = async () => {
+    const granted = await requestNotificationPermission();
+    setHasNotifyPermission(granted);
+    if (granted) scheduleDailyNotification();
+  };
 
   const [showAdmin, setShowAdmin] = useState(false);
   const [showAdminAuth, setShowAdminAuth] = useState(false);
@@ -232,12 +246,27 @@ export default function App() {
       <AnimatedBackground />
 
       {/* Clock and Date Display */}
-      <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[50] flex flex-col items-end gap-1 pointer-events-none sm:pointer-events-auto">
-        <div className="glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border-white/10 flex items-center gap-2 md:gap-3 shadow-lg scale-90 md:scale-100 origin-right">
-          <Timer className="w-4 h-4 text-primary animate-pulse" />
-          <span className="text-white font-mono font-bold text-sm md:text-lg">
-            {currentTime.toLocaleTimeString('fr-FR')}
-          </span>
+      <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[50] flex flex-col items-end gap-2 pointer-events-none sm:pointer-events-auto">
+        <div className="flex items-center gap-2">
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleNotifyRequest}
+            className={`glass p-1.5 md:p-2.5 rounded-xl md:rounded-2xl border transition-all pointer-events-auto flex items-center gap-2 ${hasNotifyPermission ? 'border-accent/30 text-accent bg-accent/10' : 'border-rose-500/30 text-rose-500 bg-rose-500/10'}`}
+          >
+            <div className="relative">
+              {hasNotifyPermission ? <Bell className="w-4 h-4 md:w-5 md:h-5" /> : <BellOff className="w-4 h-4 md:w-5 md:h-5" />}
+              {!hasNotifyPermission && <div className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full animate-ping" />}
+            </div>
+            {!hasNotifyPermission && <span className="text-[10px] md:text-xs font-bold uppercase tracking-tighter hidden sm:inline">Activer Notifs</span>}
+          </motion.button>
+
+          <div className="glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border-white/10 flex items-center gap-2 md:gap-3 shadow-lg scale-90 md:scale-100 origin-right">
+            <Timer className="w-4 h-4 text-primary animate-pulse" />
+            <span className="text-white font-mono font-bold text-sm md:text-lg">
+              {currentTime.toLocaleTimeString('fr-FR')}
+            </span>
+          </div>
         </div>
         <div className="glass px-3 py-1 rounded-xl border-white/5 text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-widest whitespace-nowrap">
           {currentTime.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
