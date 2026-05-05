@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Timer, Zap, Trophy, Check, X } from 'lucide-react';
+import { ArrowLeft, Timer, Zap, Trophy, Check, X, Volume2 } from 'lucide-react';
 import { Difficulty, Operation, Grade } from '../types';
 import { generateQuestion } from '../utils';
+import { speak } from '../services/ttsService';
 
 interface SpeedGameProps {
   difficulty: Difficulty;
@@ -17,6 +18,7 @@ export const SpeedGame: React.FC<SpeedGameProps> = ({ difficulty, grade, operati
   const [timeLeft, setTimeLeft] = useState(30);
   const [isGameOver, setIsGameOver] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
+  const [ttsEnabled, setTtsEnabled] = useState(true);
 
   const nextTask = () => {
     const q = generateQuestion(difficulty, operation, grade);
@@ -41,6 +43,9 @@ export const SpeedGame: React.FC<SpeedGameProps> = ({ difficulty, grade, operati
       isCorrect: displayValue === q.answer
     });
     setFeedback(null);
+    if (ttsEnabled && q) {
+      speak(`${q.text} égale ${displayValue}, vrai ou faux ?`);
+    }
   };
 
   useEffect(() => {
@@ -109,7 +114,13 @@ export const SpeedGame: React.FC<SpeedGameProps> = ({ difficulty, grade, operati
         <button onClick={onBack} className="p-2 md:p-3 hover:bg-white/10 rounded-xl md:rounded-2xl transition-colors text-slate-400">
           <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
         </button>
-        <div className="flex gap-2 md:gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
+          <button 
+            onClick={() => setTtsEnabled(!ttsEnabled)}
+            className={`p-2 md:p-3 rounded-xl md:rounded-2xl transition-all ${ttsEnabled ? 'bg-primary/20 text-primary' : 'bg-white/5 text-slate-500'}`}
+          >
+            <Volume2 className="w-5 h-5 md:w-6 md:h-6" />
+          </button>
           <div className="glass-card px-3 md:px-6 py-1.5 md:py-2 rounded-full border-white/5 flex items-center gap-2 md:gap-3">
             <Timer className={`w-4 h-4 md:w-5 md:h-5 ${timeLeft < 5 ? 'text-rose-500 animate-pulse' : 'text-primary'}`} />
             <span className="font-bold text-white text-sm md:text-lg">{timeLeft}s</span>

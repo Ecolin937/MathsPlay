@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Trophy, ArrowLeft, CheckCircle2, XCircle, Timer, Zap, Loader2, BrainCircuit } from 'lucide-react';
+import { Trophy, ArrowLeft, CheckCircle2, XCircle, Timer, Zap, Loader2, BrainCircuit, Volume2 } from 'lucide-react';
 import { Difficulty, Operation, Question, GameStats, Grade } from '../types';
 import { generateQuestion } from '../utils';
+import { speak } from '../services/ttsService';
 
 interface GameProps {
   difficulty: Difficulty;
@@ -22,6 +23,7 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
   const [streak, setStreak] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
+  const [ttsEnabled, setTtsEnabled] = useState(true);
   const TOTAL_QUESTIONS = 20;
 
   useEffect(() => {
@@ -33,8 +35,12 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
       setIsGameOver(true);
       return;
     }
-    setQuestion(generateQuestion(difficulty, operation, grade));
+    const newQuestion = generateQuestion(difficulty, operation, grade);
+    setQuestion(newQuestion);
     setFeedback(null);
+    if (ttsEnabled && newQuestion) {
+      speak(newQuestion.text.toString());
+    }
   };
 
   const handleAnswer = async (selected: string | number) => {
@@ -122,6 +128,12 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
         </button>
         
         <div className="flex items-center gap-3 md:gap-6">
+          <button 
+            onClick={() => setTtsEnabled(!ttsEnabled)}
+            className={`p-2 md:p-3 rounded-xl md:rounded-2xl transition-all ${ttsEnabled ? 'bg-primary/20 text-primary' : 'bg-white/5 text-slate-500'}`}
+          >
+            <Volume2 className="w-5 h-5 md:w-6 md:h-6" />
+          </button>
           <div className="text-right">
             <p className="text-[7px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-0.5">Question</p>
             <p className="text-base md:text-2xl font-display text-white">{stats.totalQuestions + 1} <span className="text-slate-600 text-[8px] md:text-sm">/ {TOTAL_QUESTIONS}</span></p>

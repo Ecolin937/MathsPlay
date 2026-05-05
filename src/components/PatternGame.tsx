@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Zap, Trophy, HelpCircle } from 'lucide-react';
+import { ArrowLeft, Zap, Trophy, HelpCircle, Volume2 } from 'lucide-react';
 import { Difficulty, Grade } from '../types';
+import { speak } from '../services/ttsService';
 
 interface PatternGameProps {
   difficulty: Difficulty;
@@ -16,6 +17,7 @@ export const PatternGame: React.FC<PatternGameProps> = ({ difficulty, grade, onB
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [ttsEnabled, setTtsEnabled] = useState(true);
 
   useEffect(() => {
     generatePattern();
@@ -44,8 +46,8 @@ export const PatternGame: React.FC<PatternGameProps> = ({ difficulty, grade, onB
     const newSeq: number[] = [];
     let current = start;
     for (let i = 0; i < length; i++) {
-      newSeq.push(current);
-      current = type === 'add' ? current + step : current * step;
+        newSeq.push(current);
+        current = type === 'add' ? current + step : current * step;
     }
 
     const nextValue = current;
@@ -59,6 +61,10 @@ export const PatternGame: React.FC<PatternGameProps> = ({ difficulty, grade, onB
       if (opt > 0 && !newOptions.includes(opt)) newOptions.push(opt);
     }
     setOptions(newOptions.sort(() => Math.random() - 0.5));
+
+    if (ttsEnabled) {
+      speak(`Suite logique : ${newSeq.join(', ')}. Quel est le nombre suivant ?`);
+    }
   };
 
   const handleAnswer = (selected: number) => {
@@ -76,7 +82,13 @@ export const PatternGame: React.FC<PatternGameProps> = ({ difficulty, grade, onB
         <button onClick={onBack} className="p-2 md:p-3 glass rounded-xl md:rounded-2xl hover:bg-white/10 transition-all text-white">
           <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
         </button>
-        <div className="flex gap-2 md:gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
+          <button 
+            onClick={() => setTtsEnabled(!ttsEnabled)}
+            className={`p-2 md:p-3 rounded-xl md:rounded-2xl transition-all ${ttsEnabled ? 'bg-primary/20 text-primary' : 'bg-white/5 text-slate-500'}`}
+          >
+            <Volume2 className="w-5 h-5 md:w-6 md:h-6" />
+          </button>
           <div className="glass px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl text-white font-bold flex items-center gap-2 text-sm md:text-base">
             <Zap className="w-4 h-4 md:w-5 md:h-5 text-yellow-400" /> {score}
           </div>

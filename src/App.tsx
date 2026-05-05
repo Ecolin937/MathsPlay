@@ -6,10 +6,11 @@ import { SpeedGame } from './components/SpeedGame';
 import { GridGame } from './components/GridGame';
 import { MemoryGame } from './components/MemoryGame';
 import { PatternGame } from './components/PatternGame';
+import { InverseMathGame } from './components/InverseMathGame';
 import { AdminPanel } from './components/AdminPanel';
 import { Difficulty, Operation, Grade } from './types';
 
-type GameMode = 'classic' | 'speed' | 'grid' | 'memory' | 'pattern';
+type GameMode = 'classic' | 'speed' | 'grid' | 'memory' | 'pattern' | 'inverse';
 
 const Logo = ({ className = "" }: { className?: string }) => (
   <div className={`flex items-center gap-2 md:gap-3 ${className}`}>
@@ -148,6 +149,7 @@ export default function App() {
     { id: 'grid', name: 'Grille', icon: <Grid3X3 className="w-6 h-6" />, desc: 'Tableau de résultats' },
     { id: 'memory', name: 'Mémoire', icon: <Brain className="w-6 h-6" />, desc: 'Calcul mental' },
     { id: 'pattern', name: 'Suites', icon: <Sigma className="w-6 h-6" />, desc: 'Séquences logiques' },
+    { id: 'inverse', name: 'Inversé', icon: <Binary className="w-6 h-6" />, desc: 'Trouve l\'opérande' },
   ];
 
   const gradesList = [
@@ -653,6 +655,9 @@ export default function App() {
               )}
               {gameMode === 'pattern' && (
                 <PatternGame difficulty={difficulty} grade={grade} onBack={() => setGameState('home')} />
+              )}
+              {gameMode === 'inverse' && (
+                <InverseMathGame difficulty={difficulty} grade={grade} operation={operation} onBack={() => setGameState('home')} />
               )}
             </motion.div>
           )}
