@@ -41,7 +41,7 @@ const FloatingShape = ({ delay, color, size, top, left }: { delay: number, color
       delay,
       ease: "linear"
     }}
-    className={`absolute ${color} ${size} rounded-full blur-[80px] opacity-30 -z-10`}
+    className={`absolute ${color} ${size} rounded-full blur-[40px] md:blur-[80px] opacity-20 md:opacity-30 -z-10`}
     style={{ top, left }}
   />
 );
@@ -54,6 +54,18 @@ export default function App() {
   const [operation, setOperation] = useState<Operation>('addition');
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [mathTip, setMathTip] = useState<string>('Les maths sont partout, même dans la musique ! 🎵');
+
+  const [showAdmin, setShowAdmin] = useState(false);
+  const [showAdminAuth, setShowAdminAuth] = useState(false);
+  const [adminCode, setAdminCode] = useState('');
+  const [authMessage, setAuthMessage] = useState<{ text: string, type: 'success' | 'error' } | null>(null);
+  const [showWelcomeNotif, setShowWelcomeNotif] = useState(false);
+  const [showCreatorBanner, setShowCreatorBanner] = useState(false);
+  const [showPoweredBy, setShowPoweredBy] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [showUpdateModal, setShowUpdateModal] = useState(true);
 
   useEffect(() => {
     const tips = [
@@ -78,17 +90,20 @@ export default function App() {
     }, 5000);
   };
 
-  const [showAdmin, setShowAdmin] = useState(false);
-  const [showAdminAuth, setShowAdminAuth] = useState(false);
-  const [adminCode, setAdminCode] = useState('');
-  const [authMessage, setAuthMessage] = useState<{ text: string, type: 'success' | 'error' } | null>(null);
-  const [showWelcomeNotif, setShowWelcomeNotif] = useState(false);
-  const [showCreatorBanner, setShowCreatorBanner] = useState(false);
-  const [showPoweredBy, setShowPoweredBy] = useState(false);
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
-
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [showUpdateModal, setShowUpdateModal] = useState(true);
+  // Background components optimized for mobile
+  const AnimatedBackground = () => (
+    <div className="fixed inset-0 pointer-events-none -z-50 overflow-hidden bg-[#020617]">
+      {/* Essential glows only */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-primary/5 blur-[120px] rounded-full" />
+      
+      {/* Desktop only floating shapes */}
+      <div className="hidden lg:block">
+        <FloatingShape delay={0} color="bg-primary" size="w-[500px] h-[500px]" top="-10%" left="-10%" />
+        <FloatingShape delay={2} color="bg-secondary" size="w-[400px] h-[400px]" top="60%" left="70%" />
+        <FloatingShape delay={4} color="bg-accent" size="w-[300px] h-[300px]" top="20%" left="80%" />
+      </div>
+    </div>
+  );
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -183,37 +198,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden selection:bg-primary/30">
-      {/* Background Elements */}
-      <FloatingShape delay={0} color="bg-primary" size="w-[500px] h-[500px]" top="-10%" left="-10%" />
-      <FloatingShape delay={2} color="bg-secondary" size="w-[400px] h-[400px]" top="60%" left="70%" />
-      <FloatingShape delay={4} color="bg-accent" size="w-[300px] h-[300px]" top="20%" left="80%" />
-      <FloatingShape delay={6} color="bg-indigo-500" size="w-[400px] h-[400px]" top="80%" left="10%" />
-      <FloatingShape delay={1} color="bg-purple-500" size="w-[200px] h-[200px]" top="40%" left="30%" />
-      <FloatingShape delay={3} color="bg-emerald-500" size="w-[250px] h-[250px]" top="10%" left="50%" />
-
-      {/* Neural Network Background Effect */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.05),transparent_50%)]" />
-        <div className="absolute top-0 left-0 w-full h-full opacity-20" 
-             style={{ backgroundImage: 'radial-gradient(#6366f1 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
-        <motion.div 
-          animate={{ 
-            scale: [1, 1.1, 1],
-            opacity: [0.3, 0.5, 0.3]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 -left-20 w-96 h-96 bg-primary/10 blur-[100px] rounded-full" 
-        />
-        <motion.div 
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.2, 0.4, 0.2]
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-1/4 -right-20 w-[30rem] h-[30rem] bg-secondary/10 blur-[120px] rounded-full" 
-        />
-      </div>
+    <div className="min-h-screen-dynamic bg-background overflow-x-hidden selection:bg-primary/30 relative">
+      <AnimatedBackground />
 
       {/* Clock and Date Display */}
       <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[50] flex flex-col items-end gap-1 pointer-events-none sm:pointer-events-auto">
@@ -359,7 +345,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto px-3 md:px-8 py-4 md:py-8 min-h-screen flex flex-col">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 md:py-8 flex flex-col relative z-10 w-full min-h-screen-dynamic">
         {/* Navigation / Header Logo */}
         <div className="fixed top-4 left-4 md:top-8 md:left-8 z-[50]">
           <Logo />

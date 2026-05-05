@@ -155,11 +155,12 @@ export const SpeedGame: React.FC<SpeedGameProps> = ({ difficulty, grade, operati
 
         {feedback && (
           <motion.div 
-            initial={{ scale: 0, opacity: 0 }} 
-            animate={{ scale: 1.5, opacity: 0.2 }} 
-            className={`absolute inset-0 flex items-center justify-center pointer-events-none ${feedback === 'correct' ? 'text-accent' : 'text-rose-500'}`}
+            initial={{ opacity: 0, scale: 0.8 }} 
+            animate={{ opacity: 1, scale: 1.2 }} 
+            exit={{ opacity: 0 }}
+            className={`absolute inset-0 flex items-center justify-center pointer-events-none ${feedback === 'correct' ? 'text-accent/30' : 'text-rose-500/30'}`}
           >
-            {feedback === 'correct' ? <Check size={80} className="md:w-[150px] md:h-[150px]" strokeWidth={3} /> : <X size={80} className="md:w-[150px] md:h-[150px]" strokeWidth={3} />}
+            {feedback === 'correct' ? <Check size={100} className="md:w-[200px] md:h-[200px]" strokeWidth={3} /> : <X size={100} className="md:w-[200px] md:h-[200px]" strokeWidth={3} />}
           </motion.div>
         )}
       </div>

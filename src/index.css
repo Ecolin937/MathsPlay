@@ -14,7 +14,9 @@
 
 @layer base {
   body {
-    @apply bg-background text-slate-200 font-sans antialiased;
+    @apply bg-background text-slate-200 font-sans antialiased overflow-x-hidden;
+    /* Prevent double-tap zoom delay */
+    touch-action: manipulation;
   }
   
   h1, h2, h3, h4 {
@@ -23,11 +25,29 @@
 }
 
 .glass {
-  @apply bg-slate-900/50 backdrop-blur-xl border border-white/10 shadow-2xl;
+  @apply bg-slate-900/40 backdrop-blur-md border border-white/10 shadow-2xl;
+}
+
+@media (max-width: 768px) {
+  .glass {
+    @apply backdrop-blur-sm bg-slate-900/60;
+  }
 }
 
 .glass-card {
-  @apply bg-slate-800/40 backdrop-blur-lg border border-slate-700/50 shadow-2xl hover:border-primary/50 transition-all duration-300;
+  @apply bg-slate-800/40 backdrop-blur-md border border-slate-700/50 shadow-2xl hover:border-primary/50 transition-all duration-300;
+}
+
+@media (max-width: 768px) {
+  .glass-card {
+    @apply backdrop-blur-sm bg-slate-800/70 border-white/5;
+  }
+}
+
+/* Fix mobile viewport height issues */
+.min-h-screen-dynamic {
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .neon-text {
