@@ -22,6 +22,28 @@ export interface GameStats {
   bestStreak: number;
 }
 
+export interface DailyQuest {
+  id: string;
+  label: string;
+  target: number;
+  current: number;
+  completed: boolean;
+  reward: number;
+}
+
+export interface WeakPoint {
+  id: string;
+  label: string;
+  errors: number;
+  lastAttempt: string;
+}
+
+export interface DictEntry {
+  term: string;
+  definition: string;
+  example: string;
+}
+
 export interface Question {
   id: string;
   text: string;

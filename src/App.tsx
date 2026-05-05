@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer } from 'lucide-react';
+import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2 } from 'lucide-react';
 import { MathGame } from './components/MathGame';
 import { SpeedGame } from './components/SpeedGame';
 import { GridGame } from './components/GridGame';
 import { MemoryGame } from './components/MemoryGame';
 import { PatternGame } from './components/PatternGame';
 import { InverseMathGame } from './components/InverseMathGame';
+import { SpecializedGames } from './components/SpecializedGames';
+import { MathDictionary } from './components/MathDictionary';
+import { MathChecker } from './components/MathChecker';
+import { QuestsAndProgress } from './components/QuestsAndProgress';
 import { AdminPanel } from './components/AdminPanel';
-import { Difficulty, Operation, Grade } from './types';
+import { Difficulty, Operation, Grade, DailyQuest, WeakPoint } from './types';
+import { requestNotificationPermission, scheduleDailyNotification } from './services/notificationService';
 
-type GameMode = 'classic' | 'speed' | 'grid' | 'memory' | 'pattern' | 'inverse';
+type GameMode = 'classic' | 'speed' | 'grid' | 'memory' | 'pattern' | 'inverse' | 'duration' | 'conversion' | 'dictionary' | 'checker' | 'quests';
 
 const Logo = ({ className = "" }: { className?: string }) => (
   <div className={`flex items-center gap-2 md:gap-3 ${className}`}>
@@ -54,6 +59,23 @@ export default function App() {
   const [operation, setOperation] = useState<Operation>('addition');
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [mathTip, setMathTip] = useState<string>('Les maths sont partout, même dans la musique ! 🎵');
+
+  const [quests, setQuests] = useState<DailyQuest[]>([
+    { id: '1', label: 'Score Total > 500', target: 500, current: 150, completed: false, reward: 50 },
+    { id: '2', label: '3 Parties Classiques', target: 3, current: 1, completed: false, reward: 30 },
+    { id: '3', label: 'Série de 10 Corrects', target: 10, current: 4, completed: false, reward: 40 },
+  ]);
+
+  const [weakPoints, setWeakPoints] = useState<WeakPoint[]>([
+    { id: '1', label: 'Division par 7', errors: 12, lastAttempt: 'Hier' },
+    { id: '2', label: 'Puissances de 2', errors: 8, lastAttempt: 'Ce matin' },
+  ]);
+
+  useEffect(() => {
+    requestNotificationPermission().then(granted => {
+      if (granted) scheduleDailyNotification();
+    });
+  }, []);
 
   const [showAdmin, setShowAdmin] = useState(false);
   const [showAdminAuth, setShowAdminAuth] = useState(false);
@@ -165,6 +187,14 @@ export default function App() {
     { id: 'memory', name: 'Mémoire', icon: <Brain className="w-6 h-6" />, desc: 'Calcul mental' },
     { id: 'pattern', name: 'Suites', icon: <Sigma className="w-6 h-6" />, desc: 'Séquences logiques' },
     { id: 'inverse', name: 'Inversé', icon: <Binary className="w-6 h-6" />, desc: 'Trouve l\'opérande' },
+    { id: 'duration', name: 'Durées', icon: <Timer className="w-6 h-6" />, desc: 'Calcul de temps' },
+    { id: 'conversion', name: 'Conversions', icon: <Hash className="w-6 h-6" />, desc: 'Unités de mesure' },
+  ];
+
+  const tools = [
+    { id: 'dictionary', name: 'Dico', icon: <BookOpen className="w-6 h-6" />, desc: 'Termes maths' },
+    { id: 'checker', name: 'Vérif', icon: <CheckCircle2 className="w-6 h-6" />, desc: 'Testeur d\'égalité' },
+    { id: 'quests', name: 'Défis', icon: <TrophyIcon className="w-6 h-6" />, desc: 'Tes quêtes' },
   ];
 
   const gradesList = [
@@ -261,28 +291,71 @@ export default function App() {
               </div>
 
               <h2 className="text-4xl md:text-5xl font-display text-white mb-2 tracking-tighter leading-none">
-                UPDATE <span className="text-primary italic">9</span>
+                UPDATE <span className="text-primary italic">11</span>
               </h2>
-              <p className="text-primary font-bold uppercase tracking-widest text-xs mb-8">Changements :</p>
+              <p className="text-primary font-bold uppercase tracking-widest text-xs mb-8">Nouveautés majeures :</p>
               
-              <div className="space-y-6 mb-10">
+              <div className="space-y-6 mb-10 overflow-y-auto max-h-[40vh] pr-2 custom-scrollbar">
                 <div className="flex items-start gap-4">
                   <div className="bg-primary/20 p-2 rounded-xl mt-1">
-                    <Timer className="w-5 h-5 text-primary" />
+                    <BookOpen className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-white font-bold text-lg">Heure en direct</h3>
-                    <p className="text-slate-400 text-sm">Vous pouvez voir quelle heure il est en haut à droite.</p>
+                    <h3 className="text-white font-bold text-lg">Dico & Outils</h3>
+                    <p className="text-slate-400 text-sm">Dictionnaire mathématique et vérificateur d'égalité.</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
                   <div className="bg-secondary/20 p-2 rounded-xl mt-1">
-                    <BookOpen className="w-5 h-5 text-secondary" />
+                    <TrophyIcon className="w-5 h-5 text-secondary" />
                   </div>
                   <div>
-                    <h3 className="text-white font-bold text-lg">Date du jour</h3>
-                    <p className="text-slate-400 text-sm">Vous pouvez voir la date du jour juste en dessous.</p>
+                    <h3 className="text-white font-bold text-lg">Défis & Suivi</h3>
+                    <p className="text-slate-400 text-sm">Quêtes quotidiennes et tableau des points faibles pour progresser.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="bg-emerald-500/20 p-2 rounded-xl mt-1">
+                    <Timer className="w-5 h-5 text-emerald-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-lg">Nouveaux Modes</h3>
+                    <p className="text-slate-400 text-sm">Calcul de durées et conversions d'unités ajoutés.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="bg-accent/20 p-2 rounded-xl mt-1">
+                    <Zap className="w-5 h-5 text-accent" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-lg">Notifications</h3>
+                    <p className="text-slate-400 text-sm">Rappels quotidiens à 13h30 pour ne jamais oublier de s'entraîner.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="bg-rose-500/20 p-2 rounded-xl mt-1">
+                    <Shield className="w-5 h-5 text-rose-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-lg">Optimisation Mobile</h3>
+                    <motion.p 
+                      animate={{ 
+                        color: ['#94a3b8', '#ef4444', '#94a3b8'],
+                        opacity: [1, 0.5, 1]
+                      }}
+                      transition={{ 
+                        duration: 1.5, 
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                      className="text-sm font-medium"
+                    >
+                      Interface smartphone ultra-fluide.
+                    </motion.p>
                   </div>
                 </div>
 
@@ -455,7 +528,12 @@ export default function App() {
                     {gameStyles.map((style) => (
                       <button
                         key={style.id}
-                        onClick={() => setGameMode(style.id as GameMode)}
+                        onClick={() => {
+                          setGameMode(style.id as GameMode);
+                          if (style.id === 'duration' || style.id === 'conversion') {
+                            setGameState('playing');
+                          }
+                        }}
                         className={`
                           min-h-[100px] md:min-h-[160px] p-3 md:p-6 rounded-2xl md:rounded-[2.5rem] border transition-all flex flex-col items-center justify-center gap-2 md:gap-5 text-center group relative overflow-hidden active:scale-95
                           ${gameMode === style.id 
@@ -530,6 +608,39 @@ export default function App() {
                         </button>
                       ))}
                     </div>
+                  </div>
+                </motion.div>
+
+                {/* 1.5. Outils & Progression */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="lg:col-span-12 glass-card p-5 md:p-10 rounded-2xl md:rounded-[3.5rem]"
+                >
+                  <h3 className="text-lg md:text-2xl font-display mb-6 md:mb-10 flex items-center gap-3 md:gap-4 text-white">
+                    <div className="bg-accent/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><Sparkles className="w-5 h-5 md:w-7 md:h-7 text-accent animate-pulse" /></div>
+                    Outils & Progression
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    {tools.map((tool) => (
+                      <button
+                        key={tool.id}
+                        onClick={() => {
+                          setGameMode(tool.id as GameMode);
+                          setGameState('playing');
+                        }}
+                        className="p-6 glass rounded-3xl border border-white/5 hover:border-accent/50 transition-all flex items-center gap-6 group text-left"
+                      >
+                        <div className="bg-accent/20 p-4 rounded-2xl group-hover:scale-110 transition-transform">
+                          {React.cloneElement(tool.icon as React.ReactElement, { className: "w-8 h-8 text-accent" })}
+                        </div>
+                        <div>
+                          <p className="text-white font-bold text-lg">{tool.name}</p>
+                          <p className="text-slate-500 text-xs uppercase tracking-widest">{tool.desc}</p>
+                        </div>
+                      </button>
+                    ))}
                   </div>
                 </motion.div>
               </div>
@@ -644,6 +755,18 @@ export default function App() {
               )}
               {gameMode === 'inverse' && (
                 <InverseMathGame difficulty={difficulty} grade={grade} operation={operation} onBack={() => setGameState('home')} />
+              )}
+              {(gameMode === 'duration' || gameMode === 'conversion') && (
+                <SpecializedGames type={gameMode} difficulty={difficulty} onBack={() => setGameState('home')} />
+              )}
+              {gameMode === 'dictionary' && (
+                <MathDictionary onBack={() => setGameState('home')} />
+              )}
+              {gameMode === 'checker' && (
+                <MathChecker onBack={() => setGameState('home')} />
+              )}
+              {gameMode === 'quests' && (
+                <QuestsAndProgress quests={quests} weakPoints={weakPoints} onBack={() => setGameState('home')} />
               )}
             </motion.div>
           )}
