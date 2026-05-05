@@ -372,7 +372,7 @@ export default function App() {
                   </div>
                   <div>
                     <h3 className="text-white font-bold text-lg">Notifications</h3>
-                    <p className="text-slate-400 text-sm">Rappels quotidiens à 13h30 pour ne jamais oublier de s'entraîner.</p>
+                    <p className="text-slate-400 text-sm">Rappels quotidiens à 13h43 pour ne jamais oublier de s'entraîner.</p>
                   </div>
                 </div>
 

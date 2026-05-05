@@ -9,7 +9,7 @@ export const scheduleDailyNotification = () => {
 
   const now = new Date();
   const target = new Date();
-  target.setHours(13, 30, 0, 0);
+  target.setHours(13, 43, 0, 0);
 
   if (now > target) {
     target.setDate(target.getDate() + 1);
@@ -19,7 +19,7 @@ export const scheduleDailyNotification = () => {
 
   setTimeout(() => {
     new Notification("C'est l'heure des maths ! 🧠", {
-      body: "Viens relever tes défis quotidiens et gagne des points !",
+      body: "Vient faire un tour sur mathsplay.vercel.app !",
       icon: "/favicon.ico"
     });
     // Reschedule for next day
