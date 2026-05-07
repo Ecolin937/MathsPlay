@@ -103,6 +103,7 @@ export default function App() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showUpdateModal, setShowUpdateModal] = useState(true);
   const [showDiegoModal, setShowDiegoModal] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
   const [canCloseDiegoModal, setCanCloseDiegoModal] = useState(false);
 
   useEffect(() => {
@@ -110,7 +111,7 @@ export default function App() {
       setShowDiegoModal(true);
       // Wait another 10 seconds before showing the close button
       setTimeout(() => setCanCloseDiegoModal(true), 10000);
-    }, 60000); // 1 minute
+    }, 180000); // 3 minutes
     return () => clearTimeout(timer);
   }, []);
 
@@ -336,6 +337,32 @@ export default function App() {
               <p className="text-primary font-bold uppercase tracking-widest text-xs mb-8">Nouveautés majeures :</p>
               
               <div className="space-y-6 mb-10 overflow-y-auto max-h-[40vh] pr-2 custom-scrollbar">
+                <div className="bg-primary/10 p-5 rounded-[2rem] border border-primary/30 relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent animate-pulse" />
+                  <div className="flex items-start gap-4 relative z-10">
+                    <div className="bg-primary p-3 rounded-2xl shadow-[0_0_20px_rgba(99,102,241,0.5)]">
+                      <Shield className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-xl uppercase tracking-tighter">Optimisation Mobile</h3>
+                      <motion.p 
+                        animate={{ 
+                          color: ['#ffffff', '#ef4444', '#ffffff'],
+                          textShadow: ['0 0 0px transparent', '0 0 10px rgba(239, 68, 68, 0.5)', '0 0 0px transparent']
+                        }}
+                        transition={{ 
+                          duration: 1, 
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                        className="text-sm font-black"
+                      >
+                        Site beaucoup plus performant et fluide sur smartphone !
+                      </motion.p>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="flex items-start gap-4">
                   <div className="bg-primary/20 p-2 rounded-xl mt-1">
                     <BookOpen className="w-5 h-5 text-primary" />
@@ -366,36 +393,13 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-4 border-b border-white/5 pb-4">
                   <div className="bg-accent/20 p-2 rounded-xl mt-1">
                     <Zap className="w-5 h-5 text-accent" />
                   </div>
                   <div>
                     <h3 className="text-white font-bold text-lg">Notifications</h3>
                     <p className="text-slate-400 text-sm">Rappels quotidiens à 13h43 pour ne jamais oublier de s'entraîner.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-rose-500/20 p-2 rounded-xl mt-1">
-                    <Shield className="w-5 h-5 text-rose-500" />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-lg">Optimisation Mobile</h3>
-                    <motion.p 
-                      animate={{ 
-                        color: ['#94a3b8', '#ef4444', '#94a3b8'],
-                        opacity: [1, 0.5, 1]
-                      }}
-                      transition={{ 
-                        duration: 1.5, 
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                      className="text-sm font-medium"
-                    >
-                      Interface smartphone ultra-fluide.
-                    </motion.p>
                   </div>
                 </div>
 
@@ -487,6 +491,49 @@ export default function App() {
                   )}
                 </AnimatePresence>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showTermsModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="glass-card max-w-lg w-full p-8 md:p-12 rounded-[2.5rem] border-white/10 shadow-2xl relative"
+            >
+              <button 
+                onClick={() => setShowTermsModal(false)}
+                className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-colors text-slate-500"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              <div className="bg-rose-500/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6">
+                <Shield className="w-8 h-8 text-rose-500" />
+              </div>
+
+              <h2 className="text-2xl font-display text-white mb-6 uppercase tracking-tighter">Conditions d'utilisation</h2>
+              
+              <div className="space-y-4 text-slate-400 text-sm leading-relaxed overflow-y-auto max-h-[50vh] pr-2 custom-scrollbar">
+                <p>
+                  je vous rappelle que ce site est 100% gratuit et ne garanti pas une fiabilité élevé même si il y a des mises à jour toutes les semaines, ceux site n'est pas protégé par les virus, mais on est quand même certifié par Google pour une sécurité minimale!
+                </p>
+              </div>
+
+              <button 
+                onClick={() => setShowTermsModal(false)}
+                className="mt-8 w-full py-4 bg-slate-800 text-white rounded-2xl font-bold hover:bg-slate-700 transition-all"
+              >
+                J'ai compris
+              </button>
             </motion.div>
           </motion.div>
         )}
@@ -759,6 +806,7 @@ export default function App() {
                     ))}
                   </div>
                 </motion.div>
+
               </div>
 
               {/* Operations Grid */}
@@ -837,6 +885,15 @@ export default function App() {
                 >
                   <Shield className="w-3 h-3 group-hover:rotate-12 transition-transform" /> Accès Administrateur
                 </button>
+
+                <div className="mt-4">
+                  <button 
+                    onClick={() => setShowTermsModal(true)}
+                    className="text-slate-600 hover:text-primary transition-all text-[8px] md:text-[10px] font-bold uppercase tracking-[0.3em] cursor-pointer"
+                  >
+                    Conditions d'utilisation
+                  </button>
+                </div>
 
                 <button 
                   onClick={() => setShowPoweredBy(!showPoweredBy)}
