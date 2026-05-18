@@ -104,7 +104,15 @@ export default function App() {
   const [showUpdateModal, setShowUpdateModal] = useState(true);
   const [showDiegoModal, setShowDiegoModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showRecommendModal, setShowRecommendModal] = useState(false);
   const [canCloseDiegoModal, setCanCloseDiegoModal] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowRecommendModal(true);
+    }, 15000); // 15 seconds
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -414,6 +422,47 @@ export default function App() {
                 className="w-full py-5 bg-primary text-white rounded-2xl font-bold text-lg shadow-[0_0_30px_rgba(99,102,241,0.3)] hover:scale-105 transition-all flex items-center justify-center gap-3 group"
               >
                 Fermer l'Annonce <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showRecommendModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="glass-card max-w-md w-full p-8 md:p-10 rounded-[2.5rem] border-primary/20 shadow-2xl text-center relative"
+            >
+              <button 
+                onClick={() => setShowRecommendModal(false)}
+                className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-colors text-slate-500"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              <div className="bg-primary/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <BrainCircuit className="w-8 h-8 text-primary animate-pulse" />
+              </div>
+
+              <h2 className="text-2xl font-display text-white mb-6 uppercase tracking-tighter">Partagez la passion !</h2>
+              
+              <p className="text-slate-300 text-lg leading-relaxed mb-8">
+                "N'oubliez pas de recommander le site à vos élèves !"
+              </p>
+
+              <button 
+                onClick={() => setShowRecommendModal(false)}
+                className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-xl"
+              >
+                C'est promis !
               </button>
             </motion.div>
           </motion.div>
