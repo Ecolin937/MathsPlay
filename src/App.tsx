@@ -105,12 +105,23 @@ export default function App() {
   const [showDiegoModal, setShowDiegoModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showRecommendModal, setShowRecommendModal] = useState(false);
+  const [showServiceModal, setShowServiceModal] = useState(false);
   const [canCloseDiegoModal, setCanCloseDiegoModal] = useState(false);
+  const [canCloseServiceModal, setCanCloseServiceModal] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowRecommendModal(true);
     }, 15000); // 15 seconds
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowServiceModal(true);
+      // Wait 6 seconds before showing the close button
+      setTimeout(() => setCanCloseServiceModal(true), 6000);
+    }, 120000); // 2 minutes
     return () => clearTimeout(timer);
   }, []);
 
@@ -464,6 +475,66 @@ export default function App() {
               >
                 C'est promis !
               </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showServiceModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[115] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="glass-card max-w-md w-full p-8 md:p-12 rounded-[2.5rem] border-secondary/20 shadow-2xl text-center relative"
+            >
+              <div className="bg-secondary/20 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-8">
+                <Sparkles className="w-10 h-10 text-secondary animate-pulse" />
+              </div>
+
+              <div className="space-y-6">
+                <p className="text-xl font-medium text-white leading-relaxed italic">
+                  "Merci d'utiliser ce service créé par Diego !"
+                </p>
+                
+                <div className="h-px w-12 bg-white/10 mx-auto" />
+                
+                <div className="bg-accent/10 p-5 rounded-2xl border border-accent/20">
+                  <p className="text-accent text-xs font-bold uppercase tracking-widest mb-2">Prochain projet :</p>
+                  <p className="text-white font-bold">
+                    Créer une application Maths Play !
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-10 min-h-[60px] flex items-center justify-center">
+                <AnimatePresence>
+                  {canCloseServiceModal ? (
+                    <motion.button 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      onClick={() => setShowServiceModal(false)}
+                      className="w-full py-4 bg-secondary text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+                    >
+                      Fermer
+                    </motion.button>
+                  ) : (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-slate-500 text-xs flex items-center gap-2"
+                    >
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Patientez quelques instants...
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </motion.div>
           </motion.div>
         )}
