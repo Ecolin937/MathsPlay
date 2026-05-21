@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2, Bell, BellOff } from 'lucide-react';
+import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2, Bell, BellOff, Smartphone, Monitor, AlertCircle, Download } from 'lucide-react';
 import { MathGame } from './components/MathGame';
 import { SpeedGame } from './components/SpeedGame';
 import { GridGame } from './components/GridGame';
@@ -102,37 +102,71 @@ export default function App() {
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showUpdateModal, setShowUpdateModal] = useState(true);
-  const [showDiegoModal, setShowDiegoModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
-  const [showRecommendModal, setShowRecommendModal] = useState(false);
-  const [showServiceModal, setShowServiceModal] = useState(false);
-  const [canCloseDiegoModal, setCanCloseDiegoModal] = useState(false);
-  const [canCloseServiceModal, setCanCloseServiceModal] = useState(false);
+
+  const [showPromoModal, setShowPromoModal] = useState(false);
+  const [canClosePromo, setCanClosePromo] = useState(false);
+  
+  const [installStep, setInstallStep] = useState<'none' | 'device' | 'os' | 'loading' | 'redirection' | 'error'>('none');
+  const [installErrorMsg, setInstallErrorMsg] = useState('');
+  const [installProgress, setInstallProgress] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowRecommendModal(true);
-    }, 15000); // 15 seconds
+      setShowPromoModal(true);
+      setTimeout(() => setCanClosePromo(true), 7000);
+    }, 6000); // 6 seconds
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowServiceModal(true);
-      // Wait 6 seconds before showing the close button
-      setTimeout(() => setCanCloseServiceModal(true), 6000);
-    }, 120000); // 2 minutes
-    return () => clearTimeout(timer);
-  }, []);
+    if (installStep === 'loading') {
+      const startTime = Date.now();
+      const duration = 6000;
+      
+      const interval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        if (elapsed >= duration) {
+          setInstallProgress(100);
+          clearInterval(interval);
+          setInstallStep('redirection');
+        } else {
+          setInstallProgress(Math.floor((elapsed / duration) * 100));
+        }
+      }, 50);
+      
+      return () => clearInterval(interval);
+    } else if (installStep === 'redirection') {
+      const timer = setTimeout(() => {
+        window.location.href = "https://sites.google.com/view/mathsplay-install-app/accueil";
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [installStep]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowDiegoModal(true);
-      // Wait another 10 seconds before showing the close button
-      setTimeout(() => setCanCloseDiegoModal(true), 10000);
-    }, 180000); // 3 minutes
-    return () => clearTimeout(timer);
-  }, []);
+  const handleInstallClick = () => {
+    setShowPromoModal(false);
+    setInstallStep('device');
+  };
+
+  const handleDeviceSelect = (device: 'pc' | 'mobile') => {
+    if (device === 'pc') {
+      setInstallErrorMsg("MathsPlay n'est pas encore disponible sur pc");
+      setInstallStep('error');
+    } else {
+      setInstallStep('os');
+    }
+  };
+
+  const handleOSSelect = (os: 'android' | 'ios') => {
+    if (os === 'ios') {
+      setInstallErrorMsg("MathsPlay n'est pas encore disponible sur ios");
+      setInstallStep('error');
+    } else {
+      setInstallStep('loading');
+      setInstallProgress(0);
+    }
+  };
 
   useEffect(() => {
     const tips = [
@@ -279,18 +313,20 @@ export default function App() {
       {/* Clock and Date Display */}
       <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[50] flex flex-col items-end gap-2 pointer-events-none sm:pointer-events-auto">
         <div className="flex items-center gap-2">
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleNotifyRequest}
-            className={`glass p-1.5 md:p-2.5 rounded-xl md:rounded-2xl border transition-all pointer-events-auto flex items-center gap-2 ${hasNotifyPermission ? 'border-accent/30 text-accent bg-accent/10' : 'border-rose-500/30 text-rose-500 bg-rose-500/10'}`}
-          >
-            <div className="relative">
-              {hasNotifyPermission ? <Bell className="w-4 h-4 md:w-5 md:h-5" /> : <BellOff className="w-4 h-4 md:w-5 md:h-5" />}
-              {!hasNotifyPermission && <div className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full animate-ping" />}
-            </div>
-            {!hasNotifyPermission && <span className="text-[10px] md:text-xs font-bold uppercase tracking-tighter hidden sm:inline">Activer Notifs</span>}
-          </motion.button>
+          {!showUpdateModal && (
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleNotifyRequest}
+              className={`glass p-1.5 md:p-2.5 rounded-xl md:rounded-2xl border transition-all pointer-events-auto flex items-center gap-2 ${hasNotifyPermission ? 'border-accent/30 text-accent bg-accent/10' : 'border-rose-500/30 text-rose-500 bg-rose-500/10'}`}
+            >
+              <div className="relative">
+                {hasNotifyPermission ? <Bell className="w-4 h-4 md:w-5 md:h-5" /> : <BellOff className="w-4 h-4 md:w-5 md:h-5" />}
+                {!hasNotifyPermission && <div className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full animate-ping" />}
+              </div>
+              {!hasNotifyPermission && <span className="text-[10px] md:text-xs font-bold uppercase tracking-tighter hidden sm:inline">Activer Notifs</span>}
+            </motion.button>
+          )}
 
           <div className="glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border-white/10 flex items-center gap-2 md:gap-3 shadow-lg scale-90 md:scale-100 origin-right">
             <Timer className="w-4 h-4 text-primary animate-pulse" />
@@ -312,34 +348,7 @@ export default function App() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[1000] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4"
           >
-            {/* Visual Arrows pointing to top-right */}
-            <div className="fixed top-20 right-4 md:top-32 md:right-32 z-[1001] pointer-events-none flex flex-col items-end gap-6 md:gap-16">
-              <motion.div 
-                animate={{ 
-                  x: [0, 6, -3, 0],
-                  y: [0, -6, 3, 0],
-                  opacity: [0.6, 1, 0.8, 1]
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="flex items-center gap-2"
-              >
-                <span className="text-primary font-bold uppercase tracking-widest text-[8px] md:text-xs">L'heure ici</span>
-                <ArrowRight className="w-8 h-8 md:w-16 md:h-16 text-primary -rotate-[45deg]" />
-              </motion.div>
-              
-              <motion.div 
-                animate={{ 
-                  x: [0, 6, -3, 0],
-                  y: [0, -6, 3, 0],
-                  opacity: [0.5, 0.9, 0.7, 0.9]
-                }}
-                transition={{ duration: 2.2, repeat: Infinity, delay: 0.3 }}
-                className="flex items-center gap-2"
-              >
-                <span className="text-secondary font-bold uppercase tracking-widest text-[8px] md:text-xs">La date ici</span>
-                <ArrowRight className="w-8 h-8 md:w-16 md:h-16 text-secondary -rotate-[45deg]" />
-              </motion.div>
-            </div>
+
 
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
@@ -440,183 +449,6 @@ export default function App() {
       </AnimatePresence>
 
       <AnimatePresence>
-        {showRecommendModal && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
-          >
-            <motion.div 
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              className="glass-card max-w-md w-full p-8 md:p-10 rounded-[2.5rem] border-primary/20 shadow-2xl text-center relative"
-            >
-              <button 
-                onClick={() => setShowRecommendModal(false)}
-                className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-colors text-slate-500"
-              >
-                <X className="w-6 h-6" />
-              </button>
-
-              <div className="bg-primary/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <BrainCircuit className="w-8 h-8 text-primary animate-pulse" />
-              </div>
-
-              <h2 className="text-2xl font-display text-white mb-6 uppercase tracking-tighter">Partagez la passion !</h2>
-              
-              <p className="text-slate-300 text-lg leading-relaxed mb-8">
-                "N'oubliez pas de recommander le site à vos élèves !"
-              </p>
-
-              <button 
-                onClick={() => setShowRecommendModal(false)}
-                className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-xl"
-              >
-                C'est promis !
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {showServiceModal && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[115] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
-          >
-            <motion.div 
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              className="glass-card max-w-md w-full p-8 md:p-12 rounded-[2.5rem] border-secondary/20 shadow-2xl text-center relative"
-            >
-              <div className="bg-secondary/20 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-8">
-                <Sparkles className="w-10 h-10 text-secondary animate-pulse" />
-              </div>
-
-              <div className="space-y-6">
-                <p className="text-xl font-medium text-white leading-relaxed italic">
-                  "Merci d'utiliser ce service créé par Diego !"
-                </p>
-                
-                <div className="h-px w-12 bg-white/10 mx-auto" />
-                
-                <div className="bg-accent/10 p-5 rounded-2xl border border-accent/20">
-                  <p className="text-accent text-xs font-bold uppercase tracking-widest mb-2">Prochain projet :</p>
-                  <p className="text-white font-bold">
-                    Créer une application Maths Play !
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-10 min-h-[60px] flex items-center justify-center">
-                <AnimatePresence>
-                  {canCloseServiceModal ? (
-                    <motion.button 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      onClick={() => setShowServiceModal(false)}
-                      className="w-full py-4 bg-secondary text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)]"
-                    >
-                      Fermer
-                    </motion.button>
-                  ) : (
-                    <motion.div 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-slate-500 text-xs flex items-center gap-2"
-                    >
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Patientez quelques instants...
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {showDiegoModal && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
-          >
-            <motion.div 
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              className="glass-card max-w-lg w-full p-8 md:p-12 rounded-[2.5rem] border-primary/20 shadow-[0_0_50px_rgba(99,102,241,0.2)] text-center relative overflow-hidden"
-            >
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-secondary" />
-              
-              <div className="bg-primary/20 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-8">
-                <Star className="w-10 h-10 text-primary animate-pulse" />
-              </div>
-
-              <h2 className="text-3xl font-display text-white mb-6 leading-tight uppercase tracking-tighter">
-                Information
-              </h2>
-              
-              <div className="space-y-6 text-slate-300">
-                <p className="text-lg font-medium text-white italic">
-                  "Merci d'utiliser ce service créé par Diego !"
-                </p>
-                
-                <div className="h-px w-12 bg-white/10 mx-auto" />
-                
-                <p className="text-slate-400">
-                  Chaque semaine, le site est actualisé avec de nouvelles fonctionnalités.
-                </p>
-
-                <div className="bg-primary/10 p-4 rounded-2xl border border-primary/20">
-                  <p className="text-white text-sm">
-                    🤝 <span className="font-bold text-primary">Diego</span> et <span className="font-bold text-primary">Antonio</span> en <span className="italic">6ème 3</span> vont faire un partenariat pour améliorer le site !
-                  </p>
-                </div>
-                
-                <div className="bg-accent/10 p-4 rounded-2xl border border-accent/20">
-                  <p className="text-accent text-sm font-bold uppercase tracking-widest mb-2">Prochain projet :</p>
-                  <p className="text-white text-sm">
-                    Transformer ce site internet en application installable depuis Windows 10, Windows 11, Android ou iOS !
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-10 min-h-[60px] flex items-center justify-center">
-                <AnimatePresence>
-                  {canCloseDiegoModal ? (
-                    <motion.button 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      onClick={() => setShowDiegoModal(false)}
-                      className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:scale-105 active:scale-95 transition-all shadow-xl"
-                    >
-                      Fermer
-                    </motion.button>
-                  ) : (
-                    <motion.div 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-slate-500 text-xs flex items-center gap-2"
-                    >
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Veuillez lire attentivement l'annonce...
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
         {showTermsModal && (
           <motion.div 
             initial={{ opacity: 0 }}
@@ -654,6 +486,179 @@ export default function App() {
               >
                 J'ai compris
               </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showPromoModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="glass-card max-w-lg w-full p-8 md:p-12 rounded-[2.5rem] border-primary/20 shadow-[0_0_50px_rgba(99,102,241,0.2)] text-center relative overflow-hidden"
+            >
+              <div className="bg-primary/20 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-8">
+                <Star className="w-10 h-10 text-primary animate-pulse" />
+              </div>
+
+              <h2 className="text-3xl font-display text-white mb-6 leading-tight uppercase tracking-tighter">
+                MERCI DE LIRE CE MESSAGE
+              </h2>
+              
+              <div className="space-y-6 text-slate-300">
+                <p className="text-lg font-medium text-white italic">
+                  Recommandez MathsPlay à vos élèves pour qu'ils puissent s'entraîner !
+                </p>
+                
+                <div className="h-px w-12 bg-white/10 mx-auto" />
+                
+                <button 
+                  onClick={handleInstallClick}
+                  className="w-full py-4 bg-accent text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] flex items-center justify-center gap-2"
+                >
+                  <Download className="w-5 h-5" /> Installer l'app MathsPlay
+                </button>
+              </div>
+
+              <div className="mt-10 min-h-[60px] flex items-center justify-center">
+                <AnimatePresence>
+                  {canClosePromo ? (
+                    <motion.button 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      onClick={() => setShowPromoModal(false)}
+                      className="w-full py-4 bg-white/10 text-white rounded-2xl font-bold hover:bg-white/20 transition-all border border-white/10"
+                    >
+                      Fermer
+                    </motion.button>
+                  ) : (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-slate-500 text-xs flex items-center gap-2"
+                    >
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Veuillez lire attentivement l'annonce...
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {installStep !== 'none' && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="glass-card max-w-md w-full p-8 md:p-10 rounded-[2.5rem] border-primary/30 shadow-2xl relative"
+            >
+              <button 
+                onClick={() => setInstallStep('none')}
+                className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-colors text-slate-500"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              {installStep === 'device' && (
+                <div className="text-center">
+                  <h2 className="text-2xl font-display text-white mb-8 uppercase tracking-tighter">Où voulez-vous installer MathsPlay ?</h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button 
+                      onClick={() => handleDeviceSelect('pc')}
+                      className="p-6 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl flex flex-col items-center gap-4 transition-all hover:scale-105"
+                    >
+                      <Monitor className="w-10 h-10 text-primary" />
+                      <span className="text-white font-bold">Ordinateur</span>
+                    </button>
+                    <button 
+                      onClick={() => handleDeviceSelect('mobile')}
+                      className="p-6 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl flex flex-col items-center gap-4 transition-all hover:scale-105"
+                    >
+                      <Smartphone className="w-10 h-10 text-accent" />
+                      <span className="text-white font-bold">Smartphone / Tablette</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {installStep === 'os' && (
+                <div className="text-center">
+                  <h2 className="text-2xl font-display text-white mb-8 uppercase tracking-tighter">Choisissez votre système</h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button 
+                      onClick={() => handleOSSelect('android')}
+                      className="p-6 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl flex flex-col items-center gap-4 transition-all hover:scale-105 group"
+                    >
+                      <Smartphone className="w-10 h-10 text-emerald-500 group-hover:text-emerald-400" />
+                      <span className="text-white font-bold">Android</span>
+                    </button>
+                    <button 
+                      onClick={() => handleOSSelect('ios')}
+                      className="p-6 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl flex flex-col items-center gap-4 transition-all hover:scale-105 group"
+                    >
+                      <Smartphone className="w-10 h-10 text-slate-300 group-hover:text-white" />
+                      <span className="text-white font-bold">iOS</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {installStep === 'loading' && (
+                <div className="text-center pt-4">
+                  <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto mb-6" />
+                  <h2 className="text-xl font-display text-white mb-4 uppercase tracking-tighter">Veuillez patienter...</h2>
+                  <p className="text-slate-400 text-sm mb-6">Installation en cours ({installProgress}%)</p>
+                  <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-primary transition-all duration-300 ease-out rounded-full"
+                      style={{ width: `${installProgress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {installStep === 'redirection' && (
+                <div className="text-center pt-4">
+                  <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <CheckCircle2 className="w-8 h-8 text-accent" />
+                  </div>
+                  <h2 className="text-xl font-display text-white mb-4 uppercase tracking-tighter">Installation prête</h2>
+                  <p className="text-slate-400 text-sm animate-pulse">Redirection...</p>
+                </div>
+              )}
+
+              {installStep === 'error' && (
+                <div className="text-center pt-4">
+                  <div className="w-16 h-16 bg-rose-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <AlertCircle className="w-8 h-8 text-rose-500" />
+                  </div>
+                  <h2 className="text-xl font-display text-rose-500 mb-4 uppercase tracking-tighter">Indisponible</h2>
+                  <p className="text-slate-300 text-sm mb-8">{installErrorMsg}</p>
+                  <button 
+                    onClick={() => setInstallStep('none')}
+                    className="w-full py-4 bg-white/10 text-white rounded-2xl font-bold hover:bg-white/20 transition-all border border-white/10"
+                  >
+                    Retour
+                  </button>
+                </div>
+              )}
+
             </motion.div>
           </motion.div>
         )}
