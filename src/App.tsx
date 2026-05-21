@@ -313,20 +313,15 @@ export default function App() {
       {/* Clock and Date Display */}
       <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[50] flex flex-col items-end gap-2 pointer-events-none sm:pointer-events-auto">
         <div className="flex items-center gap-2">
-          {!showUpdateModal && (
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleNotifyRequest}
-              className={`glass p-1.5 md:p-2.5 rounded-xl md:rounded-2xl border transition-all pointer-events-auto flex items-center gap-2 ${hasNotifyPermission ? 'border-accent/30 text-accent bg-accent/10' : 'border-rose-500/30 text-rose-500 bg-rose-500/10'}`}
-            >
-              <div className="relative">
-                {hasNotifyPermission ? <Bell className="w-4 h-4 md:w-5 md:h-5" /> : <BellOff className="w-4 h-4 md:w-5 md:h-5" />}
-                {!hasNotifyPermission && <div className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full animate-ping" />}
-              </div>
-              {!hasNotifyPermission && <span className="text-[10px] md:text-xs font-bold uppercase tracking-tighter hidden sm:inline">Activer Notifs</span>}
-            </motion.button>
-          )}
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleInstallClick}
+            className="glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border border-accent/30 text-accent bg-accent/10 transition-all pointer-events-auto flex items-center gap-2 shadow-[0_0_15px_rgba(168,85,247,0.3)] scale-90 md:scale-100 origin-right"
+          >
+            <Download className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="text-[10px] md:text-xs font-bold uppercase tracking-tighter hidden sm:inline">Installer l'app</span>
+          </motion.button>
 
           <div className="glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border-white/10 flex items-center gap-2 md:gap-3 shadow-lg scale-90 md:scale-100 origin-right">
             <Timer className="w-4 h-4 text-primary animate-pulse" />
