@@ -40,8 +40,11 @@ export const generateQuestion = (difficulty: Difficulty, operation: Operation, g
       break;
     case 'multiplication':
       if (difficulty === 'easy') {
-        num1 = Math.floor(Math.random() * 9) + 2; // de 2 à 10
-        num2 = Math.floor(Math.random() * 9) + 2; // de 2 à 10
+        num1 = Math.floor(Math.random() * 7) + 3; // de 3 à 9
+        num2 = Math.floor(Math.random() * 7) + 3; // de 3 à 9
+      } else if (difficulty === 'medium') {
+        num1 = Math.floor(Math.random() * 10) + 3; // de 3 à 12
+        num2 = Math.floor(Math.random() * 10) + 3; // de 3 à 12
       }
       answer = num1 * num2;
       text = `${num1} × ${num2}`;

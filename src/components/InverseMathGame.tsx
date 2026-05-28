@@ -35,8 +35,16 @@ export const InverseMathGame: React.FC<InverseMathGameProps> = ({ difficulty, gr
         num1 = num2 + ans;
         break;
       case 'multiplication':
-        num1 = Math.floor(Math.random() * 10) + 1;
-        num2 = Math.floor(Math.random() * 10) + 1;
+        if (difficulty === 'easy') {
+          num1 = Math.floor(Math.random() * 7) + 3; // de 3 à 9
+          num2 = Math.floor(Math.random() * 7) + 3; // de 3 à 9
+        } else if (difficulty === 'medium') {
+          num1 = Math.floor(Math.random() * 10) + 3; // de 3 à 12
+          num2 = Math.floor(Math.random() * 10) + 3; // de 3 à 12
+        } else {
+          num1 = Math.floor(Math.random() * 13) + 3; // de 3 à 15
+          num2 = Math.floor(Math.random() * 13) + 3; // de 3 à 15
+        }
         ans = num1 * num2;
         break;
       default: // addition
