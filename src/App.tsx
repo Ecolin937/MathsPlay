@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2, Bell, BellOff, Smartphone, Monitor, AlertCircle, Download } from 'lucide-react';
+import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2, Bell, BellOff, Smartphone, Monitor, AlertCircle, Download, Keyboard } from 'lucide-react';
 import { MathGame } from './components/MathGame';
 import { SpeedGame } from './components/SpeedGame';
 import { GridGame } from './components/GridGame';
 import { MemoryGame } from './components/MemoryGame';
 import { PatternGame } from './components/PatternGame';
 import { InverseMathGame } from './components/InverseMathGame';
+import { KeyboardGame } from './components/KeyboardGame';
 import { SpecializedGames } from './components/SpecializedGames';
 import { MathDictionary } from './components/MathDictionary';
 import { MathChecker } from './components/MathChecker';
@@ -15,7 +16,7 @@ import { AdminPanel } from './components/AdminPanel';
 import { Difficulty, Operation, Grade, DailyQuest, WeakPoint } from './types';
 import { requestNotificationPermission, scheduleDailyNotification } from './services/notificationService';
 
-type GameMode = 'classic' | 'speed' | 'grid' | 'memory' | 'pattern' | 'inverse' | 'duration' | 'conversion' | 'dictionary' | 'checker' | 'quests';
+type GameMode = 'classic' | 'speed' | 'grid' | 'memory' | 'pattern' | 'inverse' | 'duration' | 'conversion' | 'dictionary' | 'checker' | 'quests' | 'keyboard';
 
 const Logo = ({ className = "" }: { className?: string }) => (
   <div className={`flex items-center gap-2 md:gap-3 ${className}`}>
@@ -268,6 +269,7 @@ export default function App() {
     { id: 'inverse', name: 'Inversé', icon: <Binary className="w-6 h-6" />, desc: 'Trouve l\'opérande' },
     { id: 'duration', name: 'Durées', icon: <Timer className="w-6 h-6" />, desc: 'Calcul de temps' },
     { id: 'conversion', name: 'Conversions', icon: <Hash className="w-6 h-6" />, desc: 'Unités de mesure' },
+    { id: 'keyboard', name: 'Clavier', icon: <Keyboard className="w-6 h-6" />, desc: 'Écris la réponse' },
   ];
 
   const tools = [
@@ -316,6 +318,14 @@ export default function App() {
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            animate={{
+              y: [0, -4, 0]
+            }}
+            transition={{
+              duration: 2.2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
             onClick={handleInstallClick}
             className="glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border border-accent/30 text-accent bg-accent/10 transition-all pointer-events-auto flex items-center gap-2 shadow-[0_0_15px_rgba(168,85,247,0.3)] scale-90 md:scale-100 origin-right"
           >
@@ -1033,6 +1043,9 @@ export default function App() {
             >
               {gameMode === 'classic' && (
                 <MathGame difficulty={difficulty} grade={grade} operation={operation} onBack={() => setGameState('home')} />
+              )}
+              {gameMode === 'keyboard' && (
+                <KeyboardGame difficulty={difficulty} grade={grade} operation={operation} onBack={() => setGameState('home')} />
               )}
               {gameMode === 'speed' && (
                 <SpeedGame difficulty={difficulty} grade={grade} operation={operation} onBack={() => setGameState('home')} />

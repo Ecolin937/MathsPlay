@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  X, Shield, Timer, FileText, Table, Palette, 
+  X, Shield, Timer, FileText, Table, Palette, Maximize2, Minimize2,
   Save, Trash2, Plus, Play, BrainCircuit, Download,
   FileCode, FileEdit, Layout, GraduationCap, Calculator, ArrowRight, BookOpen, Star, Binary, Sparkles, Percent, Sigma, Zap, Trophy as TrophyIcon, Loader2
 } from 'lucide-react';
@@ -28,6 +28,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timerMode, setTimerMode] = useState<'countdown' | 'stopwatch'>('countdown');
+  const [isTimerFullscreen, setIsTimerFullscreen] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -236,8 +237,77 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
                     Reset
                   </button>
                 </div>
+
+                <div className="pt-4">
+                  <button 
+                    onClick={() => setIsTimerFullscreen(true)}
+                    className="w-full py-4 bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30 transition-all rounded-2xl font-bold flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(99,102,241,0.2)]"
+                  >
+                    <Maximize2 className="w-5 h-5" /> Mode Plein Écran
+                  </button>
+                </div>
               </div>
             )}
+
+            <AnimatePresence>
+              {isTimerFullscreen && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[300] bg-slate-950 flex flex-col items-center justify-center p-6 md:p-12 text-center"
+                >
+                  <button 
+                    onClick={() => setIsTimerFullscreen(false)} 
+                    className="absolute top-6 right-6 p-4 glass bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white rounded-2xl transition-all cursor-pointer border border-white/10 flex items-center gap-2 text-sm font-bold uppercase tracking-wider"
+                  >
+                    <Minimize2 className="w-5 h-5" /> Quitter Plein Écran
+                  </button>
+
+                  <div className="mb-4">
+                    <span className="text-sm md:text-2xl font-bold uppercase tracking-[0.4em] text-primary animate-pulse">
+                      {timerMode === 'countdown' ? '💻 Minuteur Classe' : '⏱️ Chronomètre Classe'}
+                    </span>
+                  </div>
+
+                  <div 
+                    onClick={() => setIsTimerRunning(!isTimerRunning)}
+                    className="cursor-pointer select-none text-[15vw] md:text-[20vw] font-mono font-black text-white hover:text-primary transition-colors tracking-tighter leading-none my-8 drop-shadow-[0_0_60px_rgba(99,102,241,0.4)]"
+                  >
+                    {timerMinutes}:{timerSeconds.toString().padStart(2, '0')}
+                  </div>
+
+                  <div className="max-w-xl w-full flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    {timerMode === 'countdown' && !isTimerRunning && (
+                      <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-2 w-full sm:w-auto">
+                        <span className="text-slate-400 text-xs font-bold uppercase tracking-wider pl-3">Ajuster:</span>
+                        <input 
+                          type="number" 
+                          value={timerMinutes} 
+                          onChange={e => setTimerMinutes(parseInt(e.target.value) || 0)}
+                          className="w-20 bg-slate-900 text-primary font-bold rounded-xl p-2 text-center text-xl outline-none focus:ring-1 focus:ring-primary"
+                        />
+                        <span className="text-slate-400 text-xs font-bold pr-3">min</span>
+                      </div>
+                    )}
+                    
+                    <button 
+                      onClick={() => setIsTimerRunning(!isTimerRunning)}
+                      className={`px-8 py-5 rounded-2xl font-bold text-white text-lg transition-all shadow-xl cursor-pointer w-full sm:w-48 ${isTimerRunning ? 'bg-rose-500 hover:bg-rose-400' : 'bg-primary hover:bg-primary/80'}`}
+                    >
+                      {isTimerRunning ? 'Stop' : 'Démarrer'}
+                    </button>
+                    
+                    <button 
+                      onClick={() => { setIsTimerRunning(false); setTimerMinutes(timerMode === 'countdown' ? 60 : 0); setTimerSeconds(0); }}
+                      className="px-8 py-5 bg-white/10 hover:bg-white/20 border border-white/10 text-white rounded-2xl font-bold text-lg transition-all cursor-pointer w-full sm:w-32"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {activeTool === 'tools' && (
               <ProfToolContent 
