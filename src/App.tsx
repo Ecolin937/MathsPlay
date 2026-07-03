@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2, Bell, BellOff, Smartphone, Monitor, AlertCircle, Download, Keyboard } from 'lucide-react';
+import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2, Bell, BellOff, Smartphone, Monitor, AlertCircle, Download, Keyboard, Backpack, Crosshair, ClipboardList, ShoppingCart, Droplet, Castle, Calendar, Menu, Dumbbell, Wrench, Settings, ArrowUp, Clock, LogOut } from 'lucide-react';
+import { HistoryModal } from './components/HistoryModal';
 import { MathGame } from './components/MathGame';
 import { SpeedGame } from './components/SpeedGame';
 import { GridGame } from './components/GridGame';
@@ -52,6 +53,15 @@ const FloatingShape = ({ delay, color, size, top, left }: { delay: number, color
   />
 );
 
+const BOTTOM_BAR_ITEMS = [
+  { id: 'entrainements', icon: Dumbbell, label: 'Entraînements', badge: 0, color: 'text-indigo-400', bg: 'bg-indigo-400', action: 'entrainements' },
+  { id: 'admin', icon: Shield, label: 'Admin', badge: 0, color: 'text-red-500', bg: 'bg-red-500', action: 'admin' },
+  { id: 'outils', icon: Wrench, label: 'Outils', badge: 0, color: 'text-amber-500', bg: 'bg-amber-500', action: 'outils' },
+  { id: 'historique', icon: Clock, label: 'Historique', badge: 0, color: 'text-emerald-400', bg: 'bg-emerald-400', action: 'historique' },
+  { id: 'parametres', icon: Settings, label: 'Paramètres', badge: 0, color: 'text-slate-400', bg: 'bg-slate-400', action: 'parametres' },
+  { id: 'quitter', icon: LogOut, label: 'Quitter', badge: 0, color: 'text-rose-500', bg: 'bg-rose-500', action: 'quitter' },
+];
+
 export default function App() {
   const [gameState, setGameState] = useState<'home' | 'playing'>('home');
   const [gameMode, setGameMode] = useState<GameMode>('classic');
@@ -101,10 +111,66 @@ export default function App() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [showTime, setShowTime] = useState(() => localStorage.getItem('showTime') !== 'false');
+  const [showDate, setShowDate] = useState(() => localStorage.getItem('showDate') !== 'false');
+  const [showInstallBtn, setShowInstallBtn] = useState(() => localStorage.getItem('showInstallBtn') !== 'false');
+  const [showUpdateBtn, setShowUpdateBtn] = useState(() => localStorage.getItem('showUpdateBtn') !== 'false');
+  const [widgetPosition, setWidgetPosition] = useState(() => localStorage.getItem('widgetPosition') || 'top-right');
   const [showSplash, setShowSplash] = useState(true);
   const [splashPhase, setSplashPhase] = useState<'studio' | 'impact'>('studio');
+  const [showExitSplash, setShowExitSplash] = useState(false);
+  const [exitSplashPhase, setExitSplashPhase] = useState<'studio' | 'impact'>('studio');
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [showTrainingModal, setShowTrainingModal] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState(() => localStorage.getItem('theme') || 'theme-cyber');
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.className = currentTheme;
+    localStorage.setItem('theme', currentTheme);
+    localStorage.setItem('showTime', showTime.toString());
+    localStorage.setItem('showDate', showDate.toString());
+    localStorage.setItem('showInstallBtn', showInstallBtn.toString());
+    localStorage.setItem('showUpdateBtn', showUpdateBtn.toString());
+    localStorage.setItem('widgetPosition', widgetPosition);
+  }, [currentTheme, showTime, showDate, showInstallBtn, showUpdateBtn, widgetPosition]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleBottomAction = (action: string) => {
+    setIsMobileMenuOpen(false);
+    if (action === 'entrainements') {
+      setShowTrainingModal(true);
+      document.getElementById('protocoles')?.scrollIntoView({ behavior: 'smooth' });
+    } else if (action === 'admin') {
+      setShowAdminAuth(true);
+    } else if (action === 'outils') {
+      document.getElementById('outils-progression')?.scrollIntoView({ behavior: 'smooth' });
+    } else if (action === 'historique') {
+      setShowHistoryModal(true);
+    } else if (action === 'parametres') {
+      setShowSettingsModal(true);
+    } else if (action === 'quitter') {
+      setShowExitSplash(true);
+      setExitSplashPhase('studio');
+      setTimeout(() => {
+        setExitSplashPhase('impact');
+      }, 1500);
+      setTimeout(() => {
+        window.location.href = 'about:blank';
+      }, 4500);
+    }
+  };
 
   useEffect(() => {
     const phaseTimer = setTimeout(() => {
@@ -184,9 +250,19 @@ export default function App() {
     setMathTip(tips[Math.floor(Math.random() * tips.length)]);
   }, [gameState, grade]);
 
+  const triggerGameStart = () => {
+    setSplashPhase('studio');
+    setShowSplash(true);
+    setTimeout(() => setSplashPhase('impact'), 1500);
+    setTimeout(() => {
+      setShowSplash(false);
+      setGameState('playing');
+    }, 4500);
+  };
+
   const startGame = (op: Operation) => {
     setOperation(op);
-    setGameState('playing');
+    triggerGameStart();
   };
 
   const handleExternalRedirect = () => {
@@ -547,52 +623,184 @@ export default function App() {
             </AnimatePresence>
           </motion.div>
         )}
+
+        {showExitSplash && (
+          <motion.div
+            key="exitSplash"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className="fixed inset-0 z-[9999] bg-slate-950 flex flex-col items-center justify-center overflow-hidden select-none"
+          >
+            <AnimatePresence mode="wait">
+              {exitSplashPhase === 'studio' ? (
+                <motion.div
+                  key="phase1"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0, scale: 1.5, filter: "blur(10px)" }}
+                  transition={{ duration: 0.4, ease: "easeIn" }}
+                  className="relative flex flex-col items-center justify-center h-full w-full bg-black"
+                >
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="relative text-8xl md:text-[10rem] font-black italic tracking-tighter"
+                  >
+                    <div className="text-white/5 pr-4" style={{ WebkitTextStroke: '2px rgba(255,255,255,0.1)' }}>
+                      MP
+                    </div>
+                    <motion.div 
+                      className="absolute top-0 left-0 text-white whitespace-nowrap drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] pr-4"
+                      initial={{ clipPath: "inset(-20% -20% -20% -20%)" }}
+                      animate={{ clipPath: "inset(100% -20% -20% -20%)" }}
+                      transition={{ duration: 1.2, delay: 0.4, ease: "easeInOut" }}
+                    >
+                      MP
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="phase2"
+                  className="absolute inset-0 flex flex-col items-center justify-center"
+                >
+                  {/* Smoke / Fog */}
+                  <motion.div
+                    animate={{ x: [-30, 30, -30], y: [-25, 25, -25] }}
+                    transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute -top-10 -left-10 w-[60%] h-[60%] rounded-full bg-rose-600/10 blur-[120px] pointer-events-none mix-blend-screen"
+                  />
+                  <motion.div
+                    animate={{ x: [30, -30, 30], y: [25, -25, 25] }}
+                    transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute -bottom-10 -right-10 w-[60%] h-[60%] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none mix-blend-screen"
+                  />
+                  <div 
+                    className="absolute inset-0 opacity-[0.03] pointer-events-none bg-repeat" 
+                    style={{ backgroundImage: `radial-gradient(circle, #ffffff 1px, transparent 1px)`, backgroundSize: '24px 24px' }}
+                  />
+
+                  <motion.div
+                    animate={{ 
+                      x: [0, 0, -15, 15, -12, 12, -8, 8, -4, 4, 0],
+                      y: [0, 0, 10, -10, 8, -8, 5, -5, 2, -2, 0]
+                    }}
+                    transition={{ 
+                      duration: 0.8,
+                      ease: "easeOut",
+                      times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+                    }}
+                    className="relative z-10 flex flex-col items-center"
+                  >
+                    {/* Burst particles */}
+                    {splashParticles.map((p, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
+                        animate={{ x: p.tx, y: p.ty, scale: [0, 1.8, 0], opacity: [0, 1, 0.8, 0] }}
+                        transition={{ duration: 0.9, ease: [0.1, 0.8, 0.2, 1] }}
+                        className={`absolute rounded-full pointer-events-none ${
+                          i % 3 === 0 ? 'bg-rose-500 shadow-[0_0_12px_#f43f5e]' : i % 3 === 1 ? 'bg-blue-500 shadow-[0_0_12px_#3b82f6]' : 'bg-white shadow-[0_0_12px_#ffffff]'
+                        }`}
+                        style={{ width: `${p.size}px`, height: `${p.size}px` }}
+                      />
+                    ))}
+
+                    <motion.div
+                      initial={{ scale: 0.2, opacity: 0, filter: "blur(20px)" }}
+                      animate={{ scale: [0.2, 1.12, 1], opacity: 1, filter: "blur(0px)" }}
+                      transition={{ duration: 0.4, times: [0, 0.7, 1], ease: "easeOut" }}
+                      className="relative overflow-hidden px-10 py-4 flex flex-col items-center justify-center"
+                    >
+                      <h1 className="text-6xl md:text-9xl font-black italic tracking-tighter uppercase select-none flex">
+                        <span className="bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                          À 
+                        </span>
+                        <span className="bg-gradient-to-r from-rose-500 via-purple-500 to-blue-500 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(244,63,94,0.4)] ml-4">
+                          Bientôt
+                        </span>
+                      </h1>
+                      
+                      <motion.p 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.6 }}
+                        className="text-xs md:text-sm font-black text-slate-300 uppercase mt-4 text-center tracking-[0.4em] font-sans drop-shadow-[0_0_10px_rgba(255,255,255,0.25)]"
+                      >
+                        Reviens vite t'entraîner !
+                      </motion.p>
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
       </AnimatePresence>
 
       <AnimatedBackground />
 
       {/* Clock and Date Display */}
-      <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[50] flex flex-col items-end gap-2 pointer-events-none sm:pointer-events-auto">
-        <div className="flex items-center gap-2">
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowUpdateModal(true)}
-            className="glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border border-primary/30 text-primary bg-primary/10 transition-all pointer-events-auto flex items-center gap-2 shadow-[0_0_15px_rgba(99,102,241,0.3)] scale-90 md:scale-100 origin-right"
-          >
-            <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-            <span className="text-[10px] md:text-xs font-bold uppercase tracking-tighter hidden sm:inline">Update</span>
-          </motion.button>
+      {gameState !== 'playing' && !showSettingsModal && (
+      <div className={`fixed z-[50] flex flex-col gap-2 pointer-events-none sm:pointer-events-auto ${
+        (showAdminAuth || showAdmin) ? 'bottom-8 right-4 md:bottom-8 md:right-8 items-end' :
+        widgetPosition === 'top-right' ? 'top-4 right-4 md:top-8 md:right-8 items-end' :
+        widgetPosition === 'top-left' ? 'top-4 left-4 md:top-8 md:left-8 items-start' :
+        widgetPosition === 'bottom-right' ? 'bottom-24 right-4 md:bottom-28 md:right-8 items-end' :
+        'bottom-24 left-4 md:bottom-28 md:left-8 items-start'
+      }`}>
+        <div className={`flex items-center gap-2 ${(!(showAdminAuth || showAdmin) && widgetPosition.includes('left')) ? 'flex-row-reverse' : ''}`}>
+          {showUpdateBtn && !(showAdminAuth || showAdmin) && (
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowUpdateModal(true)}
+              className={`glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border border-primary/30 text-primary bg-primary/10 transition-all pointer-events-auto flex items-center gap-2 shadow-[0_0_15px_rgba(99,102,241,0.3)] scale-90 md:scale-100 ${(!(showAdminAuth || showAdmin) && widgetPosition.includes('left')) ? 'origin-left' : 'origin-right'}`}
+            >
+              <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+              <span className="text-[10px] md:text-xs font-bold uppercase tracking-tighter hidden sm:inline">Update</span>
+            </motion.button>
+          )}
 
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            animate={{
-              y: [0, -4, 0]
-            }}
-            transition={{
-              duration: 2.2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            onClick={handleInstallClick}
-            className="glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border border-accent/30 text-accent bg-accent/10 transition-all pointer-events-auto flex items-center gap-2 shadow-[0_0_15px_rgba(168,85,247,0.3)] scale-90 md:scale-100 origin-right"
-          >
-            <Download className="w-4 h-4 md:w-5 md:h-5" />
-            <span className="text-[10px] md:text-xs font-bold uppercase tracking-tighter hidden sm:inline">Installer l'app</span>
-          </motion.button>
+          {showInstallBtn && !(showAdminAuth || showAdmin) && (
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              animate={{
+                y: [0, -4, 0]
+              }}
+              transition={{
+                duration: 2.2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              onClick={handleInstallClick}
+              className={`glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border border-accent/30 text-accent bg-accent/10 transition-all pointer-events-auto flex items-center gap-2 shadow-[0_0_15px_rgba(168,85,247,0.3)] scale-90 md:scale-100 ${(!(showAdminAuth || showAdmin) && widgetPosition.includes('left')) ? 'origin-left' : 'origin-right'}`}
+            >
+              <Download className="w-4 h-4 md:w-5 md:h-5" />
+              <span className="text-[10px] md:text-xs font-bold uppercase tracking-tighter hidden sm:inline">Installer l'app</span>
+            </motion.button>
+          )}
 
-          <div className="glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border-white/10 flex items-center gap-2 md:gap-3 shadow-lg scale-90 md:scale-100 origin-right">
-            <Timer className="w-4 h-4 text-primary animate-pulse" />
-            <span className="text-white font-mono font-bold text-sm md:text-lg">
-              {currentTime.toLocaleTimeString('fr-FR')}
-            </span>
+          {showTime && (
+            <div className={`glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border-white/10 flex items-center gap-2 md:gap-3 shadow-lg scale-90 md:scale-100 ${(!(showAdminAuth || showAdmin) && widgetPosition.includes('left')) ? 'origin-left' : 'origin-right'}`}>
+              <Timer className="w-4 h-4 text-primary animate-pulse" />
+              <span className="text-white font-mono font-bold text-sm md:text-lg">
+                {currentTime.toLocaleTimeString('fr-FR')}
+              </span>
+            </div>
+          )}
+        </div>
+        {showDate && (
+          <div className={`glass px-3 py-1 rounded-xl border-white/5 text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-widest whitespace-nowrap`}>
+            {currentTime.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
           </div>
-        </div>
-        <div className="glass px-3 py-1 rounded-xl border-white/5 text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-widest whitespace-nowrap">
-          {currentTime.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-        </div>
+        )}
       </div>
+      )}
 
       <AnimatePresence>
         {showUpdateModal && (
@@ -614,7 +822,7 @@ export default function App() {
               </div>
 
               <h2 className="text-4xl md:text-5xl font-display text-white mb-2 tracking-tighter leading-none">
-                UPDATE <span className="text-primary italic">11</span>
+                UPDATE <span className="text-primary italic">12</span>
               </h2>
               <p className="text-primary font-bold uppercase tracking-widest text-xs mb-8">Nouveautés majeures :</p>
               
@@ -623,10 +831,10 @@ export default function App() {
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent animate-pulse" />
                   <div className="flex items-start gap-4 relative z-10">
                     <div className="bg-primary p-3 rounded-2xl shadow-[0_0_20px_rgba(99,102,241,0.5)]">
-                      <Shield className="w-6 h-6 text-white" />
+                      <Layout className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-white font-bold text-xl uppercase tracking-tighter">Optimisation Mobile</h3>
+                      <h3 className="text-white font-bold text-xl uppercase tracking-tighter">Nouvelle Barre de Navigation</h3>
                       <motion.p 
                         animate={{ 
                           color: ['#ffffff', '#ef4444', '#ffffff'],
@@ -639,7 +847,7 @@ export default function App() {
                         }}
                         className="text-sm font-black"
                       >
-                        Site beaucoup plus performant et fluide sur smartphone !
+                        Une nouvelle barre super stylée est maintenant dispo en bas !
                       </motion.p>
                     </div>
                   </div>
@@ -647,47 +855,47 @@ export default function App() {
 
                 <div className="flex items-start gap-4">
                   <div className="bg-primary/20 p-2 rounded-xl mt-1">
-                    <BookOpen className="w-5 h-5 text-primary" />
+                    <Clock className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-white font-bold text-lg">Dico & Outils</h3>
-                    <p className="text-slate-400 text-sm">Dictionnaire mathématique et vérificateur d'égalité.</p>
+                    <h3 className="text-white font-bold text-lg">Historique Amélioré</h3>
+                    <p className="text-slate-400 text-sm">Ajout de l'historique de jeu avec la possibilité de tout effacer.</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
                   <div className="bg-secondary/20 p-2 rounded-xl mt-1">
-                    <TrophyIcon className="w-5 h-5 text-secondary" />
+                    <Settings className="w-5 h-5 text-secondary" />
                   </div>
                   <div>
-                    <h3 className="text-white font-bold text-lg">Défis & Suivi</h3>
-                    <p className="text-slate-400 text-sm">Quêtes quotidiennes et tableau des points faibles pour progresser.</p>
+                    <h3 className="text-white font-bold text-lg">Nouveaux Paramètres</h3>
+                    <p className="text-slate-400 text-sm">Contrôlez l'affichage de l'heure, de la date et des boutons depuis la nouvelle page de paramètres.</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
                   <div className="bg-emerald-500/20 p-2 rounded-xl mt-1">
-                    <Timer className="w-5 h-5 text-emerald-500" />
+                    <Zap className="w-5 h-5 text-emerald-500" />
                   </div>
                   <div>
-                    <h3 className="text-white font-bold text-lg">Nouveaux Modes</h3>
-                    <p className="text-slate-400 text-sm">Calcul de durées et conversions d'unités ajoutés.</p>
+                    <h3 className="text-white font-bold text-lg">Animations fluides</h3>
+                    <p className="text-slate-400 text-sm">L'animation d'introduction a été corrigée et optimisée.</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4 border-b border-white/5 pb-4">
                   <div className="bg-accent/20 p-2 rounded-xl mt-1">
-                    <Zap className="w-5 h-5 text-accent" />
+                    <Shield className="w-5 h-5 text-accent" />
                   </div>
                   <div>
-                    <h3 className="text-white font-bold text-lg">Notifications</h3>
-                    <p className="text-slate-400 text-sm">Rappels quotidiens à 13h43 pour ne jamais oublier de s'entraîner.</p>
+                    <h3 className="text-white font-bold text-lg">Interface Intelligente</h3>
+                    <p className="text-slate-400 text-sm">L'affichage s'adapte parfaitement lors de l'accès à l'admin ou aux paramètres pour une expérience claire.</p>
                   </div>
                 </div>
 
                 <div className="bg-white/5 p-4 rounded-2xl border border-white/10 italic text-slate-400 text-xs flex items-center gap-3">
                   <div className="h-8 w-1 bg-primary rounded-full" />
-                  Regardez les flèches animées pour localiser ces nouveaux modules !
+                  Mettez à jour vos paramètres pour en profiter pleinement !
                 </div>
               </div>
 
@@ -898,9 +1106,11 @@ export default function App() {
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 md:py-8 flex flex-col relative z-10 w-full min-h-screen-dynamic">
         {/* Navigation / Header Logo */}
+        {gameState !== 'playing' && (
         <div className="fixed top-4 left-4 md:top-8 md:left-8 z-[50]">
           <Logo />
         </div>
+        )}
 
         <AnimatePresence mode="wait">
           {gameState === 'home' ? (
@@ -967,7 +1177,7 @@ export default function App() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="lg:col-span-7 glass-card p-5 md:p-10 rounded-2xl md:rounded-[3.5rem]"
+                  className="lg:col-span-12 glass-card p-5 md:p-10 rounded-2xl md:rounded-[3.5rem]"
                 >
                   <h3 className="text-lg md:text-2xl font-display mb-6 md:mb-10 flex items-center gap-3 md:gap-4 text-white">
                     <div className="bg-primary/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><Layout className="w-5 h-5 md:w-7 md:h-7 text-primary animate-pulse" /></div>
@@ -980,7 +1190,7 @@ export default function App() {
                         onClick={() => {
                           setGameMode(style.id as GameMode);
                           if (style.id === 'duration' || style.id === 'conversion') {
-                            setGameState('playing');
+                            triggerGameStart();
                           }
                         }}
                         className={`
@@ -1005,63 +1215,11 @@ export default function App() {
                   </div>
                 </motion.div>
 
-                {/* 2. Grade & Difficulty */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2 }}
-                  className="lg:col-span-5 glass-card p-5 md:p-10 rounded-2xl md:rounded-[3.5rem] space-y-6 md:space-y-10"
-                >
-                  <div>
-                    <h3 className="text-base md:text-xl font-display mb-4 md:mb-8 flex items-center gap-3 md:gap-4 text-white">
-                      <div className="bg-secondary/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><GraduationCap className="w-4 h-4 md:w-6 md:h-6 text-secondary animate-pulse" /></div>
-                      Sélection du Niveau
-                    </h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
-                      {gradesList.map((g) => (
-                        <button
-                          key={g.id}
-                          onClick={() => setGrade(g.id as Grade)}
-                          className={`
-                            py-3.5 md:py-4 rounded-xl md:rounded-2xl border transition-all text-[11px] md:text-sm font-bold active:scale-95
-                            ${grade === g.id 
-                              ? 'border-secondary bg-secondary/20 text-secondary shadow-[0_0_20px_rgba(168,85,247,0.3)]' 
-                              : 'border-white/5 hover:border-white/20 text-slate-500'}
-                          `}
-                        >
-                          {g.name}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
 
-                  <div>
-                    <h3 className="text-base md:text-xl font-display mb-4 md:mb-8 flex items-center gap-3 md:gap-4 text-white">
-                      <div className="bg-accent/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><Zap className="w-4 h-4 md:w-6 md:h-6 text-accent animate-bounce" /></div>
-                      Intensité du Calcul
-                    </h3>
-                    <div className="flex flex-wrap gap-3 md:gap-4">
-                      {(['easy', 'medium', 'hard'] as Difficulty[]).map((d) => (
-                        <button
-                          key={d}
-                          onClick={() => setDifficulty(d)}
-                          className={`
-                            flex-1 min-w-[70px] py-3.5 md:py-4 rounded-xl md:rounded-2xl border transition-all text-[11px] md:text-sm font-bold active:scale-95
-                            ${difficulty === d 
-                              ? 'border-accent bg-accent/20 text-accent shadow-[0_0_20px_rgba(16,185,129,0.3)]' 
-                              : 'border-white/5 hover:border-white/20 text-slate-500'}
-                          `}
-                        >
-                          {d === 'easy' ? 'Bas' : d === 'medium' ? 'Moyen' : 'Max'}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
 
                 {/* 1.5. Outils & Progression */}
                 <motion.div 
+                  id="outils-progression"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -1077,7 +1235,7 @@ export default function App() {
                         key={tool.id}
                         onClick={() => {
                           setGameMode(tool.id as GameMode);
-                          setGameState('playing');
+                          triggerGameStart();
                         }}
                         className="p-6 glass rounded-3xl border border-white/5 hover:border-accent/50 transition-all flex items-center gap-6 group text-left"
                       >
@@ -1096,7 +1254,7 @@ export default function App() {
               </div>
 
               {/* Operations Grid */}
-              <section>
+              <section id="protocoles">
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 md:mb-12 px-2 md:px-6 gap-2 md:gap-4">
                   <h3 className="text-xl md:text-3xl font-display flex items-center gap-3 md:gap-4 text-white">
                     <div className="bg-primary/20 p-2 md:p-3 rounded-xl md:rounded-2xl"><TrophyIcon className="w-5 h-5 md:w-7 md:h-7 text-primary animate-pulse" /></div>
@@ -1198,6 +1356,12 @@ export default function App() {
                   >
                     Conditions d'utilisation
                   </button>
+                </div>
+
+                <div className="mt-4">
+                  <p className="text-slate-500 text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-bold">
+                    Créé par Diego Hamon Bayard
+                  </p>
                 </div>
 
                 <button 
@@ -1336,7 +1500,316 @@ export default function App() {
           )}
         </AnimatePresence>
 
+        <AnimatePresence>
+          {!showSplash && gameState === 'home' && !showAdminAuth && (
+            <motion.div
+              initial={{ y: 150, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 150, opacity: 0 }}
+              className="fixed bottom-0 left-0 right-0 z-50 hidden md:flex justify-center pointer-events-none"
+            >
+              <div className="relative pointer-events-auto pb-4 sm:pb-6 pt-10">
+                {/* Background Bar */}
+                <div className="absolute bottom-4 sm:bottom-6 left-0 right-0 h-14 sm:h-16 bg-[#1a1c23]/95 backdrop-blur-xl rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.8)] border border-white/5" />
+                
+                {/* Items */}
+                <div className="relative flex items-end gap-1 sm:gap-2 md:gap-4 px-3 sm:px-6">
+                  {BOTTOM_BAR_ITEMS.map((item) => (
+                    <div key={item.id} onClick={() => handleBottomAction(item.action)} className="relative flex flex-col items-center group cursor-pointer w-[4rem] sm:w-[5rem] md:w-20">
+                      {/* Icon Circle Container */}
+                      <div className="relative z-10 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-b from-slate-500 to-slate-800 flex items-center justify-center mb-1 group-hover:-translate-y-2 group-active:scale-95 transition-all duration-300 shadow-[0_8px_20px_rgba(0,0,0,0.6)]">
+                        <div className="absolute inset-[2px] rounded-full bg-gradient-to-b from-[#2a2d35] to-[#15171e] flex items-center justify-center">
+                           {/* Glow effect based on icon color */}
+                          <div className={`absolute inset-0 opacity-20 ${item.bg} blur-md rounded-full`} />
+                          <item.icon className={`relative z-10 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 ${item.color} drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]`} />
+                        </div>
+                      </div>
+                      
+                      {/* Badge */}
+                      {item.badge > 0 && (
+                        <div className="absolute top-0 right-1 sm:right-2 z-20 w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded-full border-2 border-[#1a1c23] flex items-center justify-center text-[10px] sm:text-[11px] font-black text-white shadow-lg">
+                          {item.badge}
+                        </div>
+                      )}
+                      
+                      {/* Label */}
+                      <span className="text-[10px] sm:text-[11px] md:text-sm font-black text-white tracking-wide drop-shadow-md pb-1.5 z-10">
+                        {item.label}
+                      </span>
+                    </div>
+                  ))}
+                  <AnimatePresence>
+                    {showScrollTop && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.5, width: 0 }}
+                        animate={{ opacity: 1, scale: 1, width: 'auto' }}
+                        exit={{ opacity: 0, scale: 0.5, width: 0 }}
+                        className="relative flex flex-col items-center group cursor-pointer w-[4rem] sm:w-[5rem] md:w-20 ml-2"
+                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                      >
+                        <div className="relative z-10 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-b from-slate-500 to-slate-800 flex items-center justify-center mb-1 group-hover:-translate-y-2 group-active:scale-95 transition-all duration-300 shadow-[0_8px_20px_rgba(0,0,0,0.6)]">
+                          <div className="absolute inset-[2px] rounded-full bg-gradient-to-b from-[#2a2d35] to-[#15171e] flex items-center justify-center">
+                            <div className="absolute inset-0 opacity-20 bg-primary blur-md rounded-full" />
+                            <ArrowUp className="relative z-10 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" />
+                          </div>
+                        </div>
+                        <span className="text-[10px] sm:text-[11px] md:text-sm font-black text-white tracking-wide drop-shadow-md pb-1.5 z-10 whitespace-nowrap">
+                          Haut
+                        </span>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {showTrainingModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto"
+            >
+              <motion.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                className="glass-card max-w-lg w-full p-6 md:p-8 rounded-3xl border-indigo-500/30 relative my-auto"
+              >
+                <button
+                  onClick={() => setShowTrainingModal(false)}
+                  className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-full transition-colors text-slate-400"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <div className="bg-indigo-500/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Dumbbell className="w-8 h-8 text-indigo-400" />
+                </div>
+                <h2 className="text-2xl font-display text-white mb-6 text-center">Entraînements</h2>
+                
+                <div className="space-y-6 md:space-y-8 mb-8">
+                  <div>
+                    <h3 className="text-sm md:text-base font-display mb-3 md:mb-4 flex items-center gap-2 text-white">
+                      <div className="bg-secondary/20 p-1.5 md:p-2 rounded-lg"><GraduationCap className="w-4 h-4 text-secondary" /></div>
+                      Sélection du Niveau
+                    </h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3">
+                      {gradesList.map((g) => (
+                        <button
+                          key={g.id}
+                          onClick={() => setGrade(g.id as Grade)}
+                          className={`
+                            py-2.5 md:py-3 rounded-xl border transition-all text-xs md:text-sm font-bold active:scale-95
+                            ${grade === g.id 
+                              ? 'border-secondary bg-secondary/20 text-secondary shadow-[0_0_15px_rgba(168,85,247,0.3)]' 
+                              : 'border-white/5 hover:border-white/20 text-slate-500'}
+                          `}
+                        >
+                          {g.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm md:text-base font-display mb-3 md:mb-4 flex items-center gap-2 text-white">
+                      <div className="bg-accent/20 p-1.5 md:p-2 rounded-lg"><Zap className="w-4 h-4 text-accent" /></div>
+                      Intensité du Calcul
+                    </h3>
+                    <div className="flex flex-wrap gap-2 md:gap-3">
+                      {(['easy', 'medium', 'hard'] as Difficulty[]).map((d) => (
+                        <button
+                          key={d}
+                          onClick={() => setDifficulty(d)}
+                          className={`
+                            flex-1 min-w-[70px] py-2.5 md:py-3 rounded-xl border transition-all text-xs md:text-sm font-bold active:scale-95
+                            ${difficulty === d 
+                              ? 'border-accent bg-accent/20 text-accent shadow-[0_0_15px_rgba(16,185,129,0.3)]' 
+                              : 'border-white/5 hover:border-white/20 text-slate-500'}
+                          `}
+                        >
+                          {d === 'easy' ? 'Bas' : d === 'medium' ? 'Moyen' : 'Max'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    setShowTrainingModal(false);
+                    setTimeout(() => {
+                      document.getElementById('protocoles')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
+                  className="w-full py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl font-bold transition-colors"
+                >
+                  Aller aux protocoles
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+        <AnimatePresence>
+          {showHistoryModal && <HistoryModal onClose={() => setShowHistoryModal(false)} />}
+        </AnimatePresence>
+
+          {showSettingsModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto"
+            >
+              <motion.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                className="glass-card max-w-3xl w-full p-8 rounded-3xl border-white/10 relative my-auto max-h-[90vh] flex flex-col"
+              >
+                <button
+                  onClick={() => setShowSettingsModal(false)}
+                  className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-full transition-colors text-slate-400 z-10"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                
+                <h2 className="text-2xl font-display text-white mb-6 flex items-center gap-3 shrink-0">
+                  <Settings className="w-6 h-6 text-slate-400" /> Paramètres
+                </h2>
+                
+                <div className="space-y-8 overflow-y-auto custom-scrollbar pr-2 flex-1">
+                  <div>
+                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2"><Layout className="w-5 h-5 text-primary" /> Affichage & Interface</h3>
+                    <div className="space-y-3 bg-white/5 rounded-2xl p-4 border border-white/10">
+                      <label className="flex items-center justify-between cursor-pointer group">
+                        <span className="text-slate-300 font-medium group-hover:text-white transition-colors">Afficher l'heure</span>
+                        <input type="checkbox" className="w-5 h-5 accent-primary bg-slate-800 border-white/20 rounded cursor-pointer" checked={showTime} onChange={(e) => setShowTime(e.target.checked)} />
+                      </label>
+                      <label className="flex items-center justify-between cursor-pointer group">
+                        <span className="text-slate-300 font-medium group-hover:text-white transition-colors">Afficher la date</span>
+                        <input type="checkbox" className="w-5 h-5 accent-primary bg-slate-800 border-white/20 rounded cursor-pointer" checked={showDate} onChange={(e) => setShowDate(e.target.checked)} />
+                      </label>
+                      <label className="flex items-center justify-between cursor-pointer group">
+                        <span className="text-slate-300 font-medium group-hover:text-white transition-colors">Bouton de mise à jour</span>
+                        <input type="checkbox" className="w-5 h-5 accent-primary bg-slate-800 border-white/20 rounded cursor-pointer" checked={showUpdateBtn} onChange={(e) => setShowUpdateBtn(e.target.checked)} />
+                      </label>
+                      <label className="flex items-center justify-between cursor-pointer group">
+                        <span className="text-slate-300 font-medium group-hover:text-white transition-colors">Bouton Installer l'app</span>
+                        <input type="checkbox" className="w-5 h-5 accent-primary bg-slate-800 border-white/20 rounded cursor-pointer" checked={showInstallBtn} onChange={(e) => setShowInstallBtn(e.target.checked)} />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-bold text-white mb-4">Skins / Thèmes</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      {/* Theme Cyber */}
+                      <button
+                        onClick={() => setCurrentTheme('theme-cyber')}
+                        className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 ${currentTheme === 'theme-cyber' ? 'border-[#06b6d4] bg-[#09090b]' : 'border-white/10 bg-white/5 hover:bg-white/10'}`}
+                      >
+                        <div className="flex gap-1">
+                          <div className="w-4 h-4 rounded-full bg-[#8b5cf6]"></div>
+                          <div className="w-4 h-4 rounded-full bg-[#06b6d4]"></div>
+                          <div className="w-4 h-4 rounded-full bg-[#f472b6]"></div>
+                        </div>
+                        <span className="text-xs font-bold text-white text-center">Cyber Néon</span>
+                      </button>
+                      
+                      {/* Theme Fire */}
+                      <button
+                        onClick={() => setCurrentTheme('theme-fire')}
+                        className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 ${currentTheme === 'theme-fire' ? 'border-[#f97316] bg-[#1a0505]' : 'border-white/10 bg-white/5 hover:bg-white/10'}`}
+                      >
+                        <div className="flex gap-1">
+                          <div className="w-4 h-4 rounded-full bg-[#ef4444]"></div>
+                          <div className="w-4 h-4 rounded-full bg-[#f97316]"></div>
+                          <div className="w-4 h-4 rounded-full bg-[#fcd34d]"></div>
+                        </div>
+                        <span className="text-xs font-bold text-white text-center">Arène de Feu</span>
+                      </button>
+                      
+                      {/* Theme Glacier */}
+                      <button
+                        onClick={() => setCurrentTheme('theme-glacier')}
+                        className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 ${currentTheme === 'theme-glacier' ? 'border-[#38bdf8] bg-[#020617]' : 'border-white/10 bg-white/5 hover:bg-white/10'}`}
+                      >
+                        <div className="flex gap-1">
+                          <div className="w-4 h-4 rounded-full bg-[#38bdf8]"></div>
+                          <div className="w-4 h-4 rounded-full bg-[#818cf8]"></div>
+                          <div className="w-4 h-4 rounded-full bg-[#e0f2fe]"></div>
+                        </div>
+                        <span className="text-xs font-bold text-white text-center">Glacier Impérial</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Mobile Top Menu */}
+        {!showSplash && gameState === 'home' && !showAdminAuth && (
+          <div className="fixed top-4 left-4 z-[60] md:hidden">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="glass p-2.5 rounded-xl border border-white/10 text-white bg-[#1a1c23]/90 shadow-lg pointer-events-auto flex items-center justify-center"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
+            </motion.button>
+          </div>
+        )}
+
+        <AnimatePresence>
+          {isMobileMenuOpen && !showSplash && gameState === 'home' && !showAdminAuth && (
+            <motion.div
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              className="fixed top-20 left-4 right-4 z-[55] md:hidden"
+            >
+              <div className="glass p-3 rounded-2xl border border-white/10 bg-[#1a1c23]/95 backdrop-blur-xl shadow-2xl flex flex-col gap-1.5 pointer-events-auto">
+                {BOTTOM_BAR_ITEMS.map((item) => (
+                  <button key={item.id} onClick={() => handleBottomAction(item.action)} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition-colors group">
+                    <div className={`p-2 rounded-lg ${item.bg} bg-opacity-20 flex items-center justify-center`}>
+                      <item.icon className={`w-5 h-5 ${item.color}`} />
+                    </div>
+                    <span className="text-white font-bold text-sm tracking-wide flex-1 text-left">{item.label}</span>
+                    {item.badge > 0 && (
+                      <span className="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full border border-red-800">
+                        {item.badge}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
       </div>
+      
+      {/* Mobile Floating Scroll to Top */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="md:hidden fixed bottom-6 right-6 z-[60] w-14 h-14 rounded-full bg-primary/20 backdrop-blur-md border border-primary text-white flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.5)]"
+          >
+            <ArrowUp className="w-6 h-6" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

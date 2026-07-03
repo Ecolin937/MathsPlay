@@ -110,6 +110,13 @@ export const KeyboardGame: React.FC<GameProps> = ({ difficulty, grade, operation
     if (isGameOver || feedback || !userInput.trim() || !question) return;
 
     const isCorrect = checkAnswer();
+    import('../history').then(m => m.addHistoryEntry({
+      question: question?.text || '',
+      userAnswer: inputValue,
+      correctAnswer: question?.answer || '',
+      isCorrect,
+      gameMode: 'Clavier'
+    }));
     const newTotal = stats.totalQuestions + 1;
     setLastCorrectAnswer(question.answer);
     

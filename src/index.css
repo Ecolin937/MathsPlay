@@ -6,15 +6,40 @@
   --font-display: "Space Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   
-  --color-primary: #6366f1;
-  --color-secondary: #a855f7;
-  --color-accent: #10b981;
-  --color-background: #0f172a;
+  --color-primary: var(--theme-primary);
+  --color-secondary: var(--theme-secondary);
+  --color-accent: var(--theme-accent);
+  --color-background: var(--theme-background);
+  --color-surface: var(--theme-surface);
 }
 
 @layer base {
+  :root, .theme-cyber {
+    --theme-primary: #8b5cf6; /* Violet */
+    --theme-secondary: #06b6d4; /* Cyan */
+    --theme-accent: #f472b6; /* Pink */
+    --theme-background: #09090b; /* Very dark */
+    --theme-surface: #18181b; /* Surface */
+  }
+
+  .theme-fire {
+    --theme-primary: #ef4444; /* Red */
+    --theme-secondary: #f97316; /* Orange */
+    --theme-accent: #fcd34d; /* Yellow */
+    --theme-background: #1a0505; /* Deep red dark */
+    --theme-surface: #2d0a0a; /* Surface red */
+  }
+
+  .theme-glacier {
+    --theme-primary: #38bdf8; /* Light blue */
+    --theme-secondary: #818cf8; /* Indigo */
+    --theme-accent: #e0f2fe; /* Frost */
+    --theme-background: #020617; /* Deep slate */
+    --theme-surface: #0f172a; /* Slate 900 */
+  }
+
   body {
-    @apply bg-background text-slate-200 font-sans antialiased overflow-x-hidden;
+    @apply bg-background text-slate-200 font-sans antialiased overflow-x-hidden transition-colors duration-500;
     /* Prevent double-tap zoom delay */
     touch-action: manipulation;
   }
@@ -25,22 +50,22 @@
 }
 
 .glass {
-  @apply bg-slate-900/40 backdrop-blur-md border border-white/10 shadow-2xl;
+  @apply bg-surface/60 backdrop-blur-md border border-white/10 shadow-2xl transition-colors duration-500;
 }
 
 @media (max-width: 768px) {
   .glass {
-    @apply backdrop-blur-sm bg-slate-900/60;
+    @apply backdrop-blur-sm bg-surface/80;
   }
 }
 
 .glass-card {
-  @apply bg-slate-800/40 backdrop-blur-md border border-slate-700/50 shadow-2xl hover:border-primary/50 transition-all duration-300;
+  @apply bg-surface/40 backdrop-blur-md border border-white/5 shadow-2xl hover:border-primary/50 transition-all duration-300;
 }
 
 @media (max-width: 768px) {
   .glass-card {
-    @apply backdrop-blur-sm bg-slate-800/70 border-white/5;
+    @apply backdrop-blur-sm bg-surface/70 border-white/5;
   }
 }
 
@@ -80,12 +105,12 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.5);
+  background: var(--theme-primary);
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.8);
+  background: var(--theme-secondary);
 }
 
 @keyframes scan {

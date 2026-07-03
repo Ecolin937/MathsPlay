@@ -66,6 +66,13 @@ export const SpeedGame: React.FC<SpeedGameProps> = ({ difficulty, grade, operati
     if (isGameOver || feedback || !currentTask) return;
 
     const correct = choice === currentTask.isCorrect;
+    import('../history').then(m => m.addHistoryEntry({
+      question: `${currentTask.text} = ${currentTask.displayValue}`,
+      userAnswer: choice ? 'Vrai' : 'Faux',
+      correctAnswer: currentTask.isCorrect ? 'Vrai' : 'Faux',
+      isCorrect: correct,
+      gameMode: 'Vitesse'
+    }));
     if (correct) {
       setScore(s => s + 10);
       setFeedback('correct');

@@ -47,6 +47,13 @@ export const MathGame: React.FC<GameProps> = ({ difficulty, grade, operation, on
     if (isGameOver || feedback) return;
 
     const isCorrect = selected === question?.answer;
+    import('../history').then(m => m.addHistoryEntry({
+      question: question?.text || '',
+      userAnswer: selected,
+      correctAnswer: question?.answer || '',
+      isCorrect,
+      gameMode: 'Classique'
+    }));
     const newTotal = stats.totalQuestions + 1;
     
     setStats((prev) => ({

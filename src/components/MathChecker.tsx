@@ -25,8 +25,10 @@ export const MathChecker: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
       if (Math.abs(leftVal - rightVal) < 0.000001) {
         setResult({ isCorrect: true, message: "Correct ! L'égalité est vérifiée." });
+        import('../history').then(m => m.addHistoryEntry({ question: left, userAnswer: right, correctAnswer: leftVal, isCorrect: true, gameMode: 'Vérificateur' }));
       } else {
         setResult({ isCorrect: false, message: `Incorrect. ${leftVal} n'est pas égal à ${rightVal}.` });
+        import('../history').then(m => m.addHistoryEntry({ question: left, userAnswer: right, correctAnswer: leftVal, isCorrect: false, gameMode: 'Vérificateur' }));
       }
     } catch (e) {
       setResult({ isCorrect: false, message: "Expression invalide. Vérifiez les nombres et les signes." });

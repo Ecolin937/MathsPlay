@@ -32,6 +32,7 @@ export const GridGame: React.FC<GridGameProps> = ({ difficulty, grade, operation
       if (typeof q.answer === 'number') {
         randomVal = Math.floor(Math.random() * (q.answer + 20)) + Math.max(0, q.answer - 10);
       } else {
+      import('../history').then(m => m.addHistoryEntry({ question: target.text, userAnswer: val, correctAnswer: target.answer, isCorrect: false, gameMode: 'Grille' }));
         const parts = q.answer.split('/');
         randomVal = `${Math.floor(Math.random() * 10) + 1}/${parts[1]}`;
       }
@@ -61,6 +62,7 @@ export const GridGame: React.FC<GridGameProps> = ({ difficulty, grade, operation
     if (isGameOver || !target) return;
 
     if (val === target.answer) {
+      import('../history').then(m => m.addHistoryEntry({ question: target.text, userAnswer: val, correctAnswer: target.answer, isCorrect: true, gameMode: 'Grille' }));
       setScore(s => s + 5);
       setFoundCount(f => f + 1);
       // Remove from grid visually
@@ -72,6 +74,7 @@ export const GridGame: React.FC<GridGameProps> = ({ difficulty, grade, operation
         setTimeout(generateLevel, 300);
       }
     } else {
+      import('../history').then(m => m.addHistoryEntry({ question: target.text, userAnswer: val, correctAnswer: target.answer, isCorrect: false, gameMode: 'Grille' }));
       setScore(s => Math.max(0, s - 2));
       setTimeLeft(t => Math.max(0, t - 2));
     }

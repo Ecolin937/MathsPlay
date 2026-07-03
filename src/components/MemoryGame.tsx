@@ -75,6 +75,7 @@ export const MemoryGame: React.FC<MemoryGameProps> = ({ difficulty, grade, opera
       const secondCard = cards.find(c => c.id === secondId);
 
       if (firstCard?.matchId === secondCard?.matchId) {
+        import('../history').then(m => m.addHistoryEntry({ question: `${firstCard?.content} = ${secondCard?.content}`, userAnswer: 'Paire trouvée', correctAnswer: 'Paire', isCorrect: true, gameMode: 'Mémoire' }));
         setTimeout(() => {
           setCards(prev => prev.map(c => 
             c.id === firstId || c.id === secondId ? { ...c, isMatched: true } : c
@@ -87,6 +88,7 @@ export const MemoryGame: React.FC<MemoryGameProps> = ({ difficulty, grade, opera
           setFlippedCards([]);
         }, 500);
       } else {
+        import('../history').then(m => m.addHistoryEntry({ question: `${firstCard?.content} != ${secondCard?.content}`, userAnswer: 'Mauvaise paire', correctAnswer: 'Paire', isCorrect: false, gameMode: 'Mémoire' }));
         setTimeout(() => {
           setCards(prev => prev.map(c => 
             c.id === firstId || c.id === secondId ? { ...c, isFlipped: false } : c

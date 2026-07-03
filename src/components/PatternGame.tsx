@@ -68,6 +68,14 @@ export const PatternGame: React.FC<PatternGameProps> = ({ difficulty, grade, onB
   };
 
   const handleAnswer = (selected: number) => {
+    const isCorrect = selected === answer;
+    import('../history').then(m => m.addHistoryEntry({
+      question: sequence.join(', ') + ', ?',
+      userAnswer: selected,
+      correctAnswer: answer,
+      isCorrect,
+      gameMode: 'Suite logique'
+    }));
     if (selected === answer) {
       setScore(s => s + 10);
       generatePattern();

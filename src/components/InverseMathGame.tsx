@@ -42,6 +42,7 @@ export const InverseMathGame: React.FC<InverseMathGameProps> = ({ difficulty, gr
           num1 = Math.floor(Math.random() * 10) + 3; // de 3 à 12
           num2 = Math.floor(Math.random() * 10) + 3; // de 3 à 12
         } else {
+      import('../history').then(m => m.addHistoryEntry({ question: question.text, userAnswer: val, correctAnswer: question.answer, isCorrect: false, gameMode: 'Inversé' }));
           num1 = Math.floor(Math.random() * 13) + 3; // de 3 à 15
           num2 = Math.floor(Math.random() * 13) + 3; // de 3 à 15
         }
@@ -84,6 +85,7 @@ export const InverseMathGame: React.FC<InverseMathGameProps> = ({ difficulty, gr
     e.preventDefault();
     const val = parseInt(userAnswer);
     if (val === question.answer) {
+      import('../history').then(m => m.addHistoryEntry({ question: question.text, userAnswer: val, correctAnswer: question.answer, isCorrect: true, gameMode: 'Inversé' }));
       setScore(score + 10);
       setFeedback('correct');
       setTimeout(() => {
@@ -92,6 +94,7 @@ export const InverseMathGame: React.FC<InverseMathGameProps> = ({ difficulty, gr
         generateQuestion();
       }, 500);
     } else {
+      import('../history').then(m => m.addHistoryEntry({ question: question.text, userAnswer: val, correctAnswer: question.answer, isCorrect: false, gameMode: 'Inversé' }));
       setFeedback('wrong');
       setTimeout(() => setFeedback(null), 500);
     }
