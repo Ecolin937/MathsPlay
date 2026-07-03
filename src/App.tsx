@@ -97,28 +97,33 @@ export default function App() {
   const [adminCode, setAdminCode] = useState('');
   const [authMessage, setAuthMessage] = useState<{ text: string, type: 'success' | 'error' } | null>(null);
   const [showWelcomeNotif, setShowWelcomeNotif] = useState(false);
-  const [showCreatorBanner, setShowCreatorBanner] = useState(false);
   const [showPoweredBy, setShowPoweredBy] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [showUpdateModal, setShowUpdateModal] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
+  const [splashPhase, setSplashPhase] = useState<'studio' | 'impact'>('studio');
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
 
-  const [showPromoModal, setShowPromoModal] = useState(false);
-  const [canClosePromo, setCanClosePromo] = useState(false);
-  
+  useEffect(() => {
+    const phaseTimer = setTimeout(() => {
+      setSplashPhase('impact');
+    }, 1500);
+
+    const splashTimer = setTimeout(() => {
+      setShowSplash(false);
+    }, 4500);
+
+    return () => {
+      clearTimeout(phaseTimer);
+      clearTimeout(splashTimer);
+    };
+  }, []);
+
   const [installStep, setInstallStep] = useState<'none' | 'device' | 'os' | 'loading' | 'redirection' | 'error'>('none');
   const [installErrorMsg, setInstallErrorMsg] = useState('');
   const [installProgress, setInstallProgress] = useState(0);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPromoModal(true);
-      setTimeout(() => setCanClosePromo(true), 7000);
-    }, 6000); // 6 seconds
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (installStep === 'loading') {
@@ -146,7 +151,6 @@ export default function App() {
   }, [installStep]);
 
   const handleInstallClick = () => {
-    setShowPromoModal(false);
     setInstallStep('device');
   };
 
@@ -215,11 +219,9 @@ export default function App() {
   useEffect(() => {
     const timer = setTimeout(() => setShowWelcomeNotif(true), 3000);
     const hideTimer = setTimeout(() => setShowWelcomeNotif(false), 7000);
-    const bannerTimer = setTimeout(() => setShowCreatorBanner(true), 9000);
     return () => {
       clearTimeout(timer);
       clearTimeout(hideTimer);
-      clearTimeout(bannerTimer);
     };
   }, []);
 
@@ -308,13 +310,260 @@ export default function App() {
     ]
   };
 
+  // Generate deterministic particles to avoid any SSR/hydration mismatches while keeping it beautiful
+  const splashParticles = Array.from({ length: 16 }).map((_, i) => {
+    const angle = (i * 360) / 16;
+    const rad = (angle * Math.PI) / 180;
+    const distance = 140 + (i % 3) * 35; // Deterministic distance
+    const tx = Math.cos(rad) * distance;
+    const ty = Math.sin(rad) * distance;
+    const size = 3 + (i % 2) * 3; // Deterministic size
+    return { tx, ty, size };
+  });
+
   return (
     <div className="min-h-screen-dynamic bg-background overflow-x-hidden selection:bg-primary/30 relative">
+      <AnimatePresence>
+        {showSplash && (
+          <motion.div
+            key="splash"
+            initial={{ opacity: 1 }}
+            exit={{ y: "-100%", opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed inset-0 z-[9999] bg-slate-950 flex flex-col items-center justify-center overflow-hidden select-none"
+          >
+            <AnimatePresence mode="wait">
+              {splashPhase === 'studio' ? (
+                <motion.div
+                  key="phase1"
+                  id="phase1"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0, scale: 1.5, filter: "blur(10px)" }}
+                  transition={{ duration: 0.4, ease: "easeIn" }}
+                  className="relative flex flex-col items-center justify-center h-full w-full bg-black"
+                >
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="relative text-8xl md:text-[10rem] font-black italic tracking-tighter"
+                  >
+                    {/* Background text (unfilled) */}
+                    <div className="text-white/5 pr-4" style={{ WebkitTextStroke: '2px rgba(255,255,255,0.1)' }}>
+                      MP
+                    </div>
+                    
+                    {/* Foreground text (filled) */}
+                    <motion.div 
+                      className="absolute top-0 left-0 text-white whitespace-nowrap drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] pr-4"
+                      initial={{ clipPath: "inset(100% -20% -20% -20%)" }}
+                      animate={{ clipPath: "inset(-20% -20% -20% -20%)" }}
+                      transition={{ duration: 1.2, delay: 0.2, ease: "easeInOut" }}
+                    >
+                      MP
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="phase2"
+                  id="phase2"
+                  className="absolute inset-0 flex flex-col items-center justify-center"
+                >
+                  {/* Dynamic Moving Background Smoke / Fog */}
+                  <motion.div
+                    animate={{
+                      x: [-30, 30, -30],
+                      y: [-25, 25, -25],
+                    }}
+                    transition={{
+                      duration: 12,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="absolute -top-10 -left-10 w-[60%] h-[60%] rounded-full bg-rose-600/10 blur-[120px] pointer-events-none mix-blend-screen"
+                  />
+                  <motion.div
+                    animate={{
+                      x: [30, -30, 30],
+                      y: [25, -25, 25],
+                    }}
+                    transition={{
+                      duration: 14,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="absolute -bottom-10 -right-10 w-[60%] h-[60%] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none mix-blend-screen"
+                  />
+                  <motion.div
+                    animate={{
+                      x: [-20, 20, -20],
+                      y: [20, -20, 20],
+                    }}
+                    transition={{
+                      duration: 10,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="absolute top-1/4 left-1/3 w-[40%] h-[40%] rounded-full bg-purple-600/10 blur-[110px] pointer-events-none mix-blend-screen"
+                  />
+                  
+                  {/* Subtle techno digital grid overlay */}
+                  <div 
+                    className="absolute inset-0 opacity-[0.03] pointer-events-none bg-repeat" 
+                    style={{
+                      backgroundImage: `radial-gradient(circle, #ffffff 1px, transparent 1px)`,
+                      backgroundSize: '24px 24px'
+                    }}
+                  />
+
+                  {/* Screen Shake Wrapper on slam impact */}
+                  <motion.div
+                    animate={{ 
+                      x: [0, 0, -15, 15, -12, 12, -8, 8, -4, 4, 0],
+                      y: [0, 0, 10, -10, 8, -8, 5, -5, 2, -2, 0]
+                    }}
+                    transition={{ 
+                      duration: 0.5, 
+                      times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+                      ease: "easeInOut" 
+                    }}
+                    className="relative flex flex-col items-center justify-center"
+                  >
+                    {/* Radial shockwave flash on slam impact */}
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ 
+                        scale: [0, 2.6, 1], 
+                        opacity: [0, 1, 0.15] 
+                      }}
+                      transition={{ 
+                        duration: 0.6, 
+                        ease: "easeOut" 
+                      }}
+                      className="absolute w-80 h-80 rounded-full bg-gradient-to-r from-rose-500/30 to-blue-500/30 blur-2xl pointer-events-none"
+                    />
+
+                    {/* Spark particles bursting out on impact */}
+                    {splashParticles.map((p, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
+                        animate={{ 
+                          x: p.tx, 
+                          y: p.ty, 
+                          scale: [0, 1.8, 0], 
+                          opacity: [0, 1, 0.8, 0] 
+                        }}
+                        transition={{ 
+                          duration: 0.9, 
+                          ease: [0.1, 0.8, 0.2, 1] 
+                        }}
+                        className={`absolute rounded-full pointer-events-none ${
+                          i % 3 === 0 
+                            ? 'bg-rose-500 shadow-[0_0_12px_#f43f5e]' 
+                            : i % 3 === 1 
+                              ? 'bg-blue-500 shadow-[0_0_12px_#3b82f6]' 
+                              : 'bg-white shadow-[0_0_12px_#ffffff]'
+                        }`}
+                        style={{
+                          width: `${p.size}px`,
+                          height: `${p.size}px`,
+                        }}
+                      />
+                    ))}
+
+                    {/* Logo text container with high impact scale entry */}
+                    <motion.div
+                      initial={{ scale: 0.2, opacity: 0, filter: "blur(20px)" }}
+                      animate={{ 
+                        scale: [0.2, 1.12, 1], 
+                        opacity: 1, 
+                        filter: "blur(0px)" 
+                      }}
+                      transition={{ 
+                        duration: 0.4, 
+                        times: [0, 0.7, 1],
+                        ease: "easeOut" 
+                      }}
+                      className="relative overflow-hidden px-10 py-4 flex items-center justify-center"
+                    >
+                      {/* Title */}
+                      <h1 className="text-6xl md:text-9xl font-black italic tracking-tighter uppercase select-none flex">
+                        <span className="bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                          Maths
+                        </span>
+                        <span className="bg-gradient-to-r from-rose-500 via-purple-500 to-blue-500 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(244,63,94,0.4)]">
+                          Play
+                        </span>
+                      </h1>
+
+                      {/* Sutil destello de luz que cruza de izquierda a derecha */}
+                      <motion.div
+                        initial={{ x: "-100%", opacity: 0 }}
+                        animate={{ x: "200%", opacity: [0, 1, 1, 0] }}
+                        transition={{ duration: 1.3, delay: 0.3, ease: "easeInOut" }}
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-12 pointer-events-none"
+                      />
+                    </motion.div>
+
+                    {/* Decorative sleek horizontal line below title */}
+                    <motion.div 
+                      initial={{ width: 0, opacity: 0 }}
+                      animate={{ width: "260px", opacity: 0.6 }}
+                      transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                      className="h-[2px] bg-gradient-to-r from-transparent via-white to-transparent relative mt-2 overflow-hidden"
+                    >
+                      {/* Glint sliding across the subline */}
+                      <motion.div
+                        initial={{ left: "-100%" }}
+                        animate={{ left: "100%" }}
+                        transition={{ duration: 1.5, delay: 0.8, ease: "easeInOut", repeat: Infinity, repeatDelay: 1 }}
+                        className="absolute top-0 bottom-0 w-1/3 bg-gradient-to-r from-transparent via-accent to-transparent"
+                      />
+                    </motion.div>
+
+                    {/* Cinematic competitive subtitle with neon flicker */}
+                    <motion.p
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ 
+                        opacity: [0, 0.3, 0.1, 0.9, 0.4, 1],
+                        y: 0,
+                        letterSpacing: ["0.1em", "0.4em"]
+                      }}
+                      transition={{ 
+                        duration: 0.9, 
+                        delay: 0.4, 
+                        ease: "easeOut" 
+                      }}
+                      className="text-xs md:text-sm font-black text-slate-300 uppercase mt-4 text-center tracking-[0.4em] font-sans drop-shadow-[0_0_10px_rgba(255,255,255,0.25)]"
+                    >
+                      L'Arène du Calcul Mental
+                    </motion.p>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatedBackground />
 
       {/* Clock and Date Display */}
       <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[50] flex flex-col items-end gap-2 pointer-events-none sm:pointer-events-auto">
         <div className="flex items-center gap-2">
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowUpdateModal(true)}
+            className="glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border border-primary/30 text-primary bg-primary/10 transition-all pointer-events-auto flex items-center gap-2 shadow-[0_0_15px_rgba(99,102,241,0.3)] scale-90 md:scale-100 origin-right"
+          >
+            <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+            <span className="text-[10px] md:text-xs font-bold uppercase tracking-tighter hidden sm:inline">Update</span>
+          </motion.button>
+
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -491,70 +740,6 @@ export default function App() {
               >
                 J'ai compris
               </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {showPromoModal && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
-          >
-            <motion.div 
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              className="glass-card max-w-lg w-full p-8 md:p-12 rounded-[2.5rem] border-primary/20 shadow-[0_0_50px_rgba(99,102,241,0.2)] text-center relative overflow-hidden"
-            >
-              <div className="bg-primary/20 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-8">
-                <Star className="w-10 h-10 text-primary animate-pulse" />
-              </div>
-
-              <h2 className="text-3xl font-display text-white mb-6 leading-tight uppercase tracking-tighter">
-                MERCI DE LIRE CE MESSAGE
-              </h2>
-              
-              <div className="space-y-6 text-slate-300">
-                <p className="text-lg font-medium text-white italic">
-                  Recommandez MathsPlay à vos élèves pour qu'ils puissent s'entraîner !
-                </p>
-                
-                <div className="h-px w-12 bg-white/10 mx-auto" />
-                
-                <button 
-                  onClick={handleInstallClick}
-                  className="w-full py-4 bg-accent text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] flex items-center justify-center gap-2"
-                >
-                  <Download className="w-5 h-5" /> Installer l'app MathsPlay
-                </button>
-              </div>
-
-              <div className="mt-10 min-h-[60px] flex items-center justify-center">
-                <AnimatePresence>
-                  {canClosePromo ? (
-                    <motion.button 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      onClick={() => setShowPromoModal(false)}
-                      className="w-full py-4 bg-white/10 text-white rounded-2xl font-bold hover:bg-white/20 transition-all border border-white/10"
-                    >
-                      Fermer
-                    </motion.button>
-                  ) : (
-                    <motion.div 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-slate-500 text-xs flex items-center gap-2"
-                    >
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Veuillez lire attentivement l'annonce...
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
             </motion.div>
           </motion.div>
         )}
@@ -748,14 +933,6 @@ export default function App() {
                   <p className="text-slate-400 text-base md:text-xl max-w-xl mb-8 md:mb-10 leading-relaxed mx-auto lg:mx-0">
                     Maîtrise les concepts complexes avec des défis personnalisés.
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <button 
-                      onClick={() => startGame('mixed')}
-                      className="bg-primary text-white px-6 md:px-10 py-3.5 md:py-5 rounded-xl md:rounded-2xl font-bold text-base md:text-lg shadow-[0_0_30px_rgba(99,102,241,0.4)] hover:scale-105 transition-all flex items-center justify-center gap-3 group"
-                    >
-                      <Zap className="w-5 h-5 fill-current group-hover:animate-pulse" /> Lancer l'Analyse
-                    </button>
-                  </div>
                 </motion.div>
 
                 <motion.div
@@ -779,27 +956,6 @@ export default function App() {
                       </motion.div>
                     </div>
                   </div>
-                  
-                  {/* Math Insight Card */}
-                  <motion.div 
-                    initial={{ x: 50, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className="absolute -bottom-10 -right-10 glass-card p-6 rounded-3xl max-w-xs z-20"
-                  >
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="bg-primary/20 p-2 rounded-xl"><Layout className="text-primary w-5 h-5 animate-pulse" /></div>
-                      <p className="text-xs text-primary font-bold uppercase tracking-widest">Aperçu du Programme</p>
-                    </div>
-                    <motion.p 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 1 }}
-                      className="text-sm text-slate-300 italic leading-relaxed"
-                    >
-                      "{mathTip}"
-                    </motion.p>
-                  </motion.div>
                 </motion.div>
               </section>
 
@@ -1001,11 +1157,30 @@ export default function App() {
                 </div>
               </section>
 
+              {/* Math Insight Card */}
+              <motion.div 
+                initial={{ y: 50, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                className="mx-auto mt-12 md:mt-24 max-w-md glass-card p-6 rounded-3xl z-20 shadow-[0_0_40px_rgba(99,102,241,0.15)] relative"
+              >
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <div className="bg-primary/20 p-2 rounded-xl"><Layout className="text-primary w-5 h-5 animate-pulse" /></div>
+                  <p className="text-xs text-primary font-bold uppercase tracking-widest">Aperçu du Programme</p>
+                </div>
+                <motion.p 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1 }}
+                  className="text-sm md:text-base text-slate-300 italic leading-relaxed text-center font-medium"
+                >
+                  "{mathTip}"
+                </motion.p>
+              </motion.div>
+
               <footer className="mt-20 md:mt-32 text-center border-t border-white/5 pt-12 md:pt-16 pb-12 md:pb-16 text-white font-display">
                 <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 mb-8">
                   <Logo className="scale-75 md:scale-90" />
-                  <div className="h-px w-12 bg-white/10 hidden md:block" />
-                  <p className="text-slate-500 text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-bold">Droits d'auteurs : Diego HAMON BAYARD</p>
                 </div>
                 <p className="text-slate-500 text-[10px] md:text-xs uppercase tracking-[0.4em] mb-8">© 2026 Neural Learning Systems</p>
                 
@@ -1161,31 +1336,6 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        <AnimatePresence>
-          {showCreatorBanner && (
-            <motion.div
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 100, opacity: 0 }}
-              className="fixed bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-[400] w-full max-w-md px-4"
-            >
-              <div className="glass-card p-4 md:p-6 rounded-xl md:rounded-[2rem] border-primary/30 flex items-center justify-between shadow-2xl shadow-primary/20">
-                <div className="flex items-center gap-3 md:gap-4">
-                  <div className="bg-primary/20 p-2 md:p-3 rounded-lg md:rounded-xl">
-                    <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-                  </div>
-                  <p className="text-white text-xs md:text-base font-medium">Site créé par <span className="text-primary font-bold">Diego HAMON BAYARD</span></p>
-                </div>
-                <button 
-                  onClick={() => setShowCreatorBanner(false)}
-                  className="p-2 hover:bg-white/10 rounded-lg md:rounded-xl transition-colors text-slate-400"
-                >
-                  <X className="w-4 h-4 md:w-5 md:h-5" />
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </div>
   );
