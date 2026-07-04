@@ -165,21 +165,21 @@ export default function App() {
       setExitSplashPhase('studio');
       setTimeout(() => {
         setExitSplashPhase('impact');
-      }, 1500);
+      }, 5000);
       setTimeout(() => {
         window.location.href = 'about:blank';
-      }, 4500);
+      }, 8000);
     }
   };
 
   useEffect(() => {
     const phaseTimer = setTimeout(() => {
       setSplashPhase('impact');
-    }, 1500);
+    }, 5000);
 
     const splashTimer = setTimeout(() => {
       setShowSplash(false);
-    }, 4500);
+    }, 8000);
 
     return () => {
       clearTimeout(phaseTimer);
@@ -253,11 +253,11 @@ export default function App() {
   const triggerGameStart = () => {
     setSplashPhase('studio');
     setShowSplash(true);
-    setTimeout(() => setSplashPhase('impact'), 1500);
+    setTimeout(() => setSplashPhase('impact'), 5000);
     setTimeout(() => {
       setShowSplash(false);
       setGameState('playing');
-    }, 4500);
+    }, 8000);
   };
 
   const startGame = (op: Operation) => {
@@ -416,31 +416,129 @@ export default function App() {
                   id="phase1"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, scale: 1.5, filter: "blur(10px)" }}
-                  transition={{ duration: 0.4, ease: "easeIn" }}
-                  className="relative flex flex-col items-center justify-center h-full w-full bg-black"
+                  exit={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="relative flex flex-col items-center justify-center h-full w-full bg-black overflow-hidden"
                 >
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="relative text-8xl md:text-[10rem] font-black italic tracking-tighter"
+                  <div 
+                    className="relative flex items-center justify-center gap-1 md:gap-4 h-full w-full bg-[#0a0c10]"
+                    style={{ perspective: '1200px' }}
                   >
-                    {/* Background text (unfilled) */}
-                    <div className="text-white/5 pr-4" style={{ WebkitTextStroke: '2px rgba(255,255,255,0.1)' }}>
-                      MP
-                    </div>
-                    
-                    {/* Foreground text (filled) */}
-                    <motion.div 
-                      className="absolute top-0 left-0 text-white whitespace-nowrap drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] pr-4"
-                      initial={{ clipPath: "inset(100% -20% -20% -20%)" }}
-                      animate={{ clipPath: "inset(-20% -20% -20% -20%)" }}
-                      transition={{ duration: 1.2, delay: 0.2, ease: "easeInOut" }}
+                    {/* Modern gradient background glow behind the letters */}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ 
+                        opacity: [0, 0, 0.95, 0.8, 0],
+                        scale: [0.5, 0.5, 1.5, 1.8, 2.2]
+                      }}
+                      transition={{
+                        duration: 5.0,
+                        times: [0, 0.1, 0.5, 0.9, 1.0],
+                        ease: "easeOut"
+                      }}
+                      className="absolute w-[600px] h-[600px] bg-gradient-to-tr from-[#6366f1]/40 via-[#a855f7]/30 to-[#ec4899]/40 rounded-full blur-[120px] pointer-events-none mix-blend-screen m-auto z-0"
+                    />
+
+                    <motion.div
+                      initial={{ x: -280, opacity: 0, rotateY: -75, scale: 0.7 }}
+                      animate={{
+                        x: [-280, 0, 0, -120],
+                        rotateY: [-75, 0, 0, -90],
+                        scale: [0.7, 1, 1, 0.3],
+                        opacity: [0, 1, 1, 0],
+                      }}
+                      transition={{
+                        duration: 5.0,
+                        times: [0, 0.1, 0.9, 1.0],
+                        ease: "easeInOut"
+                      }}
+                      className="relative text-8xl md:text-[12rem] font-black italic tracking-tighter select-none font-sans z-10 flex items-center justify-center"
                     >
-                      MP
+                      {/* Background (dark letter) */}
+                      <span 
+                        className="text-[#151722]"
+                        style={{
+                          textShadow: "0 1px 0 #111, 0 2px 0 #111, 0 3px 0 #111, 0 4px 0 #0c0c0c"
+                        }}
+                      >
+                        M
+                      </span>
+                      {/* Foreground (filled with white from bottom to top) */}
+                      <motion.span
+                        className="absolute inset-0 text-white flex items-center justify-center"
+                        animate={{
+                          clipPath: [
+                            "inset(100% -20% -20% -20%)",
+                            "inset(100% -20% -20% -20%)",
+                            "inset(35% -20% -20% -20%)",
+                            "inset(35% -20% -20% -20%)",
+                            "inset(-20% -20% -20% -20%)",
+                            "inset(-20% -20% -20% -20%)"
+                          ]
+                        }}
+                        transition={{
+                          duration: 5.0,
+                          times: [0, 0.1, 0.5, 0.7, 0.9, 1.0],
+                          ease: "easeInOut"
+                        }}
+                        style={{
+                          textShadow: "0 1px 0 #fff, 0 2px 0 #eaeaea, 0 3px 0 #d5d5d5, 0 4px 0 #c0c0c0, 0 0 40px rgba(255,255,255,0.8)"
+                        }}
+                      >
+                        M
+                      </motion.span>
                     </motion.div>
-                  </motion.div>
+                    
+                    <motion.div
+                      initial={{ x: 280, opacity: 0, rotateY: 75, scale: 0.7 }}
+                      animate={{
+                        x: [280, 0, 0, 120],
+                        rotateY: [75, 0, 0, 90],
+                        scale: [0.7, 1, 1, 0.3],
+                        opacity: [0, 1, 1, 0],
+                      }}
+                      transition={{
+                        duration: 5.0,
+                        times: [0, 0.1, 0.9, 1.0],
+                        ease: "easeInOut"
+                      }}
+                      className="relative text-8xl md:text-[12rem] font-black italic tracking-tighter select-none font-sans z-10 flex items-center justify-center"
+                    >
+                      {/* Background (dark letter) */}
+                      <span 
+                        className="text-[#151722]"
+                        style={{
+                          textShadow: "0 1px 0 #111, 0 2px 0 #111, 0 3px 0 #111, 0 4px 0 #0c0c0c"
+                        }}
+                      >
+                        P
+                      </span>
+                      {/* Foreground (filled with white from bottom to top) */}
+                      <motion.span
+                        className="absolute inset-0 text-white flex items-center justify-center"
+                        animate={{
+                          clipPath: [
+                            "inset(100% -20% -20% -20%)",
+                            "inset(100% -20% -20% -20%)",
+                            "inset(35% -20% -20% -20%)",
+                            "inset(35% -20% -20% -20%)",
+                            "inset(-20% -20% -20% -20%)",
+                            "inset(-20% -20% -20% -20%)"
+                          ]
+                        }}
+                        transition={{
+                          duration: 5.0,
+                          times: [0, 0.1, 0.5, 0.7, 0.9, 1.0],
+                          ease: "easeInOut"
+                        }}
+                        style={{
+                          textShadow: "0 1px 0 #fff, 0 2px 0 #eaeaea, 0 3px 0 #d5d5d5, 0 4px 0 #c0c0c0, 0 0 40px rgba(255,255,255,0.8)"
+                        }}
+                      >
+                        P
+                      </motion.span>
+                    </motion.div>
+                  </div>
                 </motion.div>
               ) : (
                 <motion.div
@@ -553,15 +651,17 @@ export default function App() {
 
                     {/* Logo text container with high impact scale entry */}
                     <motion.div
-                      initial={{ scale: 0.2, opacity: 0, filter: "blur(20px)" }}
+                      initial={{ scale: 0.2, y: -150, rotateX: 30, opacity: 0, filter: "blur(10px)" }}
                       animate={{ 
-                        scale: [0.2, 1.12, 1], 
+                        scale: [0.2, 1.15, 0.95, 1], 
+                        y: [-150, 15, -5, 0],
+                        rotateX: [30, -10, 5, 0],
                         opacity: 1, 
                         filter: "blur(0px)" 
                       }}
                       transition={{ 
-                        duration: 0.4, 
-                        times: [0, 0.7, 1],
+                        duration: 0.8, 
+                        times: [0, 0.6, 0.8, 1],
                         ease: "easeOut" 
                       }}
                       className="relative overflow-hidden px-10 py-4 flex items-center justify-center"
@@ -640,28 +740,129 @@ export default function App() {
                   key="phase1"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, scale: 1.5, filter: "blur(10px)" }}
-                  transition={{ duration: 0.4, ease: "easeIn" }}
-                  className="relative flex flex-col items-center justify-center h-full w-full bg-black"
+                  exit={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="relative flex flex-col items-center justify-center h-full w-full bg-black overflow-hidden"
                 >
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="relative text-8xl md:text-[10rem] font-black italic tracking-tighter"
+                  <div 
+                    className="relative flex items-center justify-center gap-1 md:gap-4 h-full w-full bg-[#0a0c10]"
+                    style={{ perspective: '1200px' }}
                   >
-                    <div className="text-white/5 pr-4" style={{ WebkitTextStroke: '2px rgba(255,255,255,0.1)' }}>
-                      MP
-                    </div>
-                    <motion.div 
-                      className="absolute top-0 left-0 text-white whitespace-nowrap drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] pr-4"
-                      initial={{ clipPath: "inset(-20% -20% -20% -20%)" }}
-                      animate={{ clipPath: "inset(100% -20% -20% -20%)" }}
-                      transition={{ duration: 1.2, delay: 0.4, ease: "easeInOut" }}
+                    {/* Modern gradient background glow behind the letters */}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ 
+                        opacity: [0, 0, 0.95, 0.8, 0],
+                        scale: [0.5, 0.5, 1.5, 1.8, 2.2]
+                      }}
+                      transition={{
+                        duration: 5.0,
+                        times: [0, 0.1, 0.5, 0.9, 1.0],
+                        ease: "easeOut"
+                      }}
+                      className="absolute w-[600px] h-[600px] bg-gradient-to-tr from-[#6366f1]/40 via-[#a855f7]/30 to-[#ec4899]/40 rounded-full blur-[120px] pointer-events-none mix-blend-screen m-auto z-0"
+                    />
+
+                    <motion.div
+                      initial={{ x: -280, opacity: 0, rotateY: -75, scale: 0.7 }}
+                      animate={{
+                        x: [-280, 0, 0, -120],
+                        rotateY: [-75, 0, 0, -90],
+                        scale: [0.7, 1, 1, 0.3],
+                        opacity: [0, 1, 1, 0],
+                      }}
+                      transition={{
+                        duration: 5.0,
+                        times: [0, 0.1, 0.9, 1.0],
+                        ease: "easeInOut"
+                      }}
+                      className="relative text-8xl md:text-[12rem] font-black italic tracking-tighter select-none font-sans z-10 flex items-center justify-center"
                     >
-                      MP
+                      {/* Background (dark letter) */}
+                      <span 
+                        className="text-[#151722]"
+                        style={{
+                          textShadow: "0 1px 0 #111, 0 2px 0 #111, 0 3px 0 #111, 0 4px 0 #0c0c0c"
+                        }}
+                      >
+                        M
+                      </span>
+                      {/* Foreground (empties white from top to bottom) */}
+                      <motion.span
+                        className="absolute inset-0 text-white flex items-center justify-center"
+                        animate={{
+                          clipPath: [
+                            "inset(-20% -20% -20% -20%)",
+                            "inset(-20% -20% -20% -20%)",
+                            "inset(35% -20% -20% -20%)",
+                            "inset(35% -20% -20% -20%)",
+                            "inset(120% -20% -20% -20%)",
+                            "inset(120% -20% -20% -20%)"
+                          ]
+                        }}
+                        transition={{
+                          duration: 5.0,
+                          times: [0, 0.1, 0.5, 0.7, 0.9, 1.0],
+                          ease: "easeInOut"
+                        }}
+                        style={{
+                          textShadow: "0 1px 0 #fff, 0 2px 0 #eaeaea, 0 3px 0 #d5d5d5, 0 4px 0 #c0c0c0, 0 0 40px rgba(255,255,255,0.8)"
+                        }}
+                      >
+                        M
+                      </motion.span>
                     </motion.div>
-                  </motion.div>
+                    
+                    <motion.div
+                      initial={{ x: 280, opacity: 0, rotateY: 75, scale: 0.7 }}
+                      animate={{
+                        x: [280, 0, 0, 120],
+                        rotateY: [75, 0, 0, 90],
+                        scale: [0.7, 1, 1, 0.3],
+                        opacity: [0, 1, 1, 0],
+                      }}
+                      transition={{
+                        duration: 5.0,
+                        times: [0, 0.1, 0.9, 1.0],
+                        ease: "easeInOut"
+                      }}
+                      className="relative text-8xl md:text-[12rem] font-black italic tracking-tighter select-none font-sans z-10 flex items-center justify-center"
+                    >
+                      {/* Background (dark letter) */}
+                      <span 
+                        className="text-[#151722]"
+                        style={{
+                          textShadow: "0 1px 0 #111, 0 2px 0 #111, 0 3px 0 #111, 0 4px 0 #0c0c0c"
+                        }}
+                      >
+                        P
+                      </span>
+                      {/* Foreground (empties white from top to bottom) */}
+                      <motion.span
+                        className="absolute inset-0 text-white flex items-center justify-center"
+                        animate={{
+                          clipPath: [
+                            "inset(-20% -20% -20% -20%)",
+                            "inset(-20% -20% -20% -20%)",
+                            "inset(35% -20% -20% -20%)",
+                            "inset(35% -20% -20% -20%)",
+                            "inset(120% -20% -20% -20%)",
+                            "inset(120% -20% -20% -20%)"
+                          ]
+                        }}
+                        transition={{
+                          duration: 5.0,
+                          times: [0, 0.1, 0.5, 0.7, 0.9, 1.0],
+                          ease: "easeInOut"
+                        }}
+                        style={{
+                          textShadow: "0 1px 0 #fff, 0 2px 0 #eaeaea, 0 3px 0 #d5d5d5, 0 4px 0 #c0c0c0, 0 0 40px rgba(255,255,255,0.8)"
+                        }}
+                      >
+                        P
+                      </motion.span>
+                    </motion.div>
+                  </div>
                 </motion.div>
               ) : (
                 <motion.div
