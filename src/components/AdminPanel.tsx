@@ -498,22 +498,11 @@ const ProfToolContent = ({ selectedProfTool, setSelectedProfTool, onSave }: any)
         {!selectedProfTool ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 pb-8">
             {[
-              { name: "Générateur de Devoirs", icon: <FileEdit /> },
               { name: "Calculatrice", icon: <Calculator /> },
               { name: "Convertisseur", icon: <ArrowRight /> },
-              { name: "Chronomètre", icon: <Timer /> },
               { name: "Gestion des Notes", icon: <Star /> },
-              { name: "Formulaire", icon: <FileText /> },
-              { name: "Tirage au Sort", icon: <Sparkles /> },
-              { name: "Générateur de QCM", icon: <Plus /> },
-              { name: "Aide à la Correction", icon: <Shield /> },
-              { name: "Statistiques", icon: <Percent /> },
-              { name: "Bibliothèque", icon: <Sigma /> },
-              { name: "Outil de Géométrie", icon: <Palette /> },
-              { name: "Calcul Mental", icon: <Zap /> },
               { name: "Gestion des Groupes", icon: <Layout /> },
-              { name: "Roue de la Fortune", icon: <Sparkles /> },
-              { name: "Rapports", icon: <TrophyIcon /> }
+              { name: "Roue de la Fortune", icon: <Sparkles /> }
             ].map((tool, i) => (
               <button 
                 key={i} 

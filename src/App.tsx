@@ -313,6 +313,7 @@ export default function App() {
           setShowAdmin(true);
           setAdminCode('');
           setAuthMessage(null);
+          triggerGameStart();
         }, 1000);
       } else {
         setAuthMessage({ text: 'Mot de passe incorrect', type: 'error' });
@@ -1348,6 +1349,15 @@ export default function App() {
                 >
                   <Shield className="w-3 h-3 group-hover:rotate-12 transition-transform" /> Accès Administrateur
                 </button>
+
+                <div className="mt-4">
+                  <a 
+                    href="mailto:mathsplay@pronton.me?subject=Signalement de problème - Maths Play"
+                    className="inline-flex items-center gap-1.5 text-slate-600 hover:text-rose-500 transition-all text-[8px] md:text-[10px] font-bold uppercase tracking-[0.3em] cursor-pointer"
+                  >
+                    <AlertCircle className="w-3 h-3 text-rose-500/80 group-hover:animate-bounce" /> Signaler un problème
+                  </a>
+                </div>
 
                 <div className="mt-4">
                   <button 

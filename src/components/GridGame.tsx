@@ -32,7 +32,6 @@ export const GridGame: React.FC<GridGameProps> = ({ difficulty, grade, operation
       if (typeof q.answer === 'number') {
         randomVal = Math.floor(Math.random() * (q.answer + 20)) + Math.max(0, q.answer - 10);
       } else {
-      import('../history').then(m => m.addHistoryEntry({ question: target.text, userAnswer: val, correctAnswer: target.answer, isCorrect: false, gameMode: 'Grille' }));
         const parts = q.answer.split('/');
         randomVal = `${Math.floor(Math.random() * 10) + 1}/${parts[1]}`;
       }

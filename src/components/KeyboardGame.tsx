@@ -112,7 +112,7 @@ export const KeyboardGame: React.FC<GameProps> = ({ difficulty, grade, operation
     const isCorrect = checkAnswer();
     import('../history').then(m => m.addHistoryEntry({
       question: question?.text || '',
-      userAnswer: inputValue,
+      userAnswer: userInput,
       correctAnswer: question?.answer || '',
       isCorrect,
       gameMode: 'Clavier'
