@@ -313,7 +313,6 @@ export default function App() {
           setShowAdmin(true);
           setAdminCode('');
           setAuthMessage(null);
-          triggerGameStart();
         }, 1000);
       } else {
         setAuthMessage({ text: 'Mot de passe incorrect', type: 'error' });
