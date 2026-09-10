@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2, Bell, BellOff, Smartphone, Monitor, AlertCircle, Download, Keyboard, Backpack, Crosshair, ClipboardList, ShoppingCart, Droplet, Castle, Calendar, Menu, Dumbbell, Wrench, Settings, ArrowUp, Clock, LogOut } from 'lucide-react';
+import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2, Bell, BellOff, Smartphone, Monitor, AlertCircle, Download, Keyboard, Backpack, Crosshair, ClipboardList, ShoppingCart, Droplet, Castle, Calendar, Menu, Dumbbell, Settings, ArrowUp, Clock, LogOut } from 'lucide-react';
 import { HistoryModal } from './components/HistoryModal';
 import { MathGame } from './components/MathGame';
 import { SpeedGame } from './components/SpeedGame';
 import { GridGame } from './components/GridGame';
-import { MemoryGame } from './components/MemoryGame';
 import { PatternGame } from './components/PatternGame';
 import { InverseMathGame } from './components/InverseMathGame';
 import { KeyboardGame } from './components/KeyboardGame';
@@ -17,7 +16,7 @@ import { AdminPanel } from './components/AdminPanel';
 import { Difficulty, Operation, Grade, DailyQuest, WeakPoint } from './types';
 import { requestNotificationPermission, scheduleDailyNotification } from './services/notificationService';
 
-type GameMode = 'classic' | 'speed' | 'grid' | 'memory' | 'pattern' | 'inverse' | 'duration' | 'conversion' | 'dictionary' | 'checker' | 'quests' | 'keyboard';
+type GameMode = 'classic' | 'speed' | 'grid' | 'pattern' | 'inverse' | 'duration' | 'conversion' | 'dictionary' | 'checker' | 'quests' | 'keyboard';
 
 const Logo = ({ className = "" }: { className?: string }) => (
   <div className={`flex items-center gap-2 md:gap-3 ${className}`}>
@@ -55,8 +54,7 @@ const FloatingShape = ({ delay, color, size, top, left }: { delay: number, color
 
 const BOTTOM_BAR_ITEMS = [
   { id: 'entrainements', icon: Dumbbell, label: 'Entraînements', badge: 0, color: 'text-indigo-400', bg: 'bg-indigo-400', action: 'entrainements' },
-  { id: 'admin', icon: Shield, label: 'Admin', badge: 0, color: 'text-red-500', bg: 'bg-red-500', action: 'admin' },
-  { id: 'outils', icon: Wrench, label: 'Outils', badge: 0, color: 'text-amber-500', bg: 'bg-amber-500', action: 'outils' },
+  { id: 'admin', icon: Shield, label: 'Admin', badge: 0, color: 'text-orange-500', bg: 'bg-orange-500', action: 'admin' },
   { id: 'historique', icon: Clock, label: 'Historique', badge: 0, color: 'text-emerald-400', bg: 'bg-emerald-400', action: 'historique' },
   { id: 'parametres', icon: Settings, label: 'Paramètres', badge: 0, color: 'text-slate-400', bg: 'bg-slate-400', action: 'parametres' },
   { id: 'quitter', icon: LogOut, label: 'Quitter', badge: 0, color: 'text-rose-500', bg: 'bg-rose-500', action: 'quitter' },
@@ -165,21 +163,21 @@ export default function App() {
       setExitSplashPhase('studio');
       setTimeout(() => {
         setExitSplashPhase('impact');
-      }, 5000);
+      }, 2000);
       setTimeout(() => {
         window.location.href = 'about:blank';
-      }, 8000);
+      }, 5000);
     }
   };
 
   useEffect(() => {
     const phaseTimer = setTimeout(() => {
       setSplashPhase('impact');
-    }, 5000);
+    }, 2000);
 
     const splashTimer = setTimeout(() => {
       setShowSplash(false);
-    }, 8000);
+    }, 5000);
 
     return () => {
       clearTimeout(phaseTimer);
@@ -253,11 +251,11 @@ export default function App() {
   const triggerGameStart = () => {
     setSplashPhase('studio');
     setShowSplash(true);
-    setTimeout(() => setSplashPhase('impact'), 5000);
+    setTimeout(() => setSplashPhase('impact'), 2000);
     setTimeout(() => {
       setShowSplash(false);
       setGameState('playing');
-    }, 8000);
+    }, 5000);
   };
 
   const startGame = (op: Operation) => {
@@ -342,7 +340,6 @@ export default function App() {
     { id: 'classic', name: 'Classique', icon: <Calculator className="w-6 h-6" />, desc: 'Quiz traditionnel' },
     { id: 'speed', name: 'Vitesse', icon: <Zap className="w-6 h-6" />, desc: 'Vrai ou Faux rapide' },
     { id: 'grid', name: 'Grille', icon: <Grid3X3 className="w-6 h-6" />, desc: 'Tableau de résultats' },
-    { id: 'memory', name: 'Mémoire', icon: <Brain className="w-6 h-6" />, desc: 'Calcul mental' },
     { id: 'pattern', name: 'Suites', icon: <Sigma className="w-6 h-6" />, desc: 'Séquences logiques' },
     { id: 'inverse', name: 'Inversé', icon: <Binary className="w-6 h-6" />, desc: 'Trouve l\'opérande' },
     { id: 'duration', name: 'Durées', icon: <Timer className="w-6 h-6" />, desc: 'Calcul de temps' },
@@ -431,8 +428,8 @@ export default function App() {
                         scale: [0.5, 0.5, 1.5, 1.8, 2.2]
                       }}
                       transition={{
-                        duration: 5.0,
-                        times: [0, 0.1, 0.5, 0.9, 1.0],
+                        duration: 2.0,
+                        times: [0, 0.15, 0.5, 0.85, 1.0],
                         ease: "easeOut"
                       }}
                       className="absolute w-[600px] h-[600px] bg-gradient-to-tr from-[#6366f1]/40 via-[#a855f7]/30 to-[#ec4899]/40 rounded-full blur-[120px] pointer-events-none mix-blend-screen m-auto z-0"
@@ -447,8 +444,8 @@ export default function App() {
                         opacity: [0, 1, 1, 0],
                       }}
                       transition={{
-                        duration: 5.0,
-                        times: [0, 0.1, 0.9, 1.0],
+                        duration: 2.0,
+                        times: [0, 0.15, 0.85, 1.0],
                         ease: "easeInOut"
                       }}
                       className="relative text-8xl md:text-[12rem] font-black italic tracking-tighter select-none font-sans z-10 flex items-center justify-center"
@@ -462,22 +459,20 @@ export default function App() {
                       >
                         M
                       </span>
-                      {/* Foreground (filled with white from bottom to top) */}
+                      {/* Foreground (filled with white from bottom to top without blocking) */}
                       <motion.span
                         className="absolute inset-0 text-white flex items-center justify-center"
                         animate={{
                           clipPath: [
                             "inset(100% -20% -20% -20%)",
                             "inset(100% -20% -20% -20%)",
-                            "inset(35% -20% -20% -20%)",
-                            "inset(35% -20% -20% -20%)",
                             "inset(-20% -20% -20% -20%)",
                             "inset(-20% -20% -20% -20%)"
                           ]
                         }}
                         transition={{
-                          duration: 5.0,
-                          times: [0, 0.1, 0.5, 0.7, 0.9, 1.0],
+                          duration: 2.0,
+                          times: [0, 0.15, 0.85, 1.0],
                           ease: "easeInOut"
                         }}
                         style={{
@@ -497,8 +492,8 @@ export default function App() {
                         opacity: [0, 1, 1, 0],
                       }}
                       transition={{
-                        duration: 5.0,
-                        times: [0, 0.1, 0.9, 1.0],
+                        duration: 2.0,
+                        times: [0, 0.15, 0.85, 1.0],
                         ease: "easeInOut"
                       }}
                       className="relative text-8xl md:text-[12rem] font-black italic tracking-tighter select-none font-sans z-10 flex items-center justify-center"
@@ -512,22 +507,20 @@ export default function App() {
                       >
                         P
                       </span>
-                      {/* Foreground (filled with white from bottom to top) */}
+                      {/* Foreground (filled with white from bottom to top without blocking) */}
                       <motion.span
                         className="absolute inset-0 text-white flex items-center justify-center"
                         animate={{
                           clipPath: [
                             "inset(100% -20% -20% -20%)",
                             "inset(100% -20% -20% -20%)",
-                            "inset(35% -20% -20% -20%)",
-                            "inset(35% -20% -20% -20%)",
                             "inset(-20% -20% -20% -20%)",
                             "inset(-20% -20% -20% -20%)"
                           ]
                         }}
                         transition={{
-                          duration: 5.0,
-                          times: [0, 0.1, 0.5, 0.7, 0.9, 1.0],
+                          duration: 2.0,
+                          times: [0, 0.15, 0.85, 1.0],
                           ease: "easeInOut"
                         }}
                         style={{
@@ -670,7 +663,7 @@ export default function App() {
                         <span className="bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                           Maths
                         </span>
-                        <span className="bg-gradient-to-r from-rose-500 via-purple-500 to-blue-500 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(244,63,94,0.4)]">
+                        <span className="bg-gradient-to-r from-rose-500 via-purple-500 to-blue-500 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(244,63,94,0.4)] inline-block pr-2">
                           Play
                         </span>
                       </h1>
@@ -755,8 +748,8 @@ export default function App() {
                         scale: [0.5, 0.5, 1.5, 1.8, 2.2]
                       }}
                       transition={{
-                        duration: 5.0,
-                        times: [0, 0.1, 0.5, 0.9, 1.0],
+                        duration: 2.0,
+                        times: [0, 0.15, 0.5, 0.85, 1.0],
                         ease: "easeOut"
                       }}
                       className="absolute w-[600px] h-[600px] bg-gradient-to-tr from-[#6366f1]/40 via-[#a855f7]/30 to-[#ec4899]/40 rounded-full blur-[120px] pointer-events-none mix-blend-screen m-auto z-0"
@@ -771,8 +764,8 @@ export default function App() {
                         opacity: [0, 1, 1, 0],
                       }}
                       transition={{
-                        duration: 5.0,
-                        times: [0, 0.1, 0.9, 1.0],
+                        duration: 2.0,
+                        times: [0, 0.15, 0.85, 1.0],
                         ease: "easeInOut"
                       }}
                       className="relative text-8xl md:text-[12rem] font-black italic tracking-tighter select-none font-sans z-10 flex items-center justify-center"
@@ -793,15 +786,13 @@ export default function App() {
                           clipPath: [
                             "inset(-20% -20% -20% -20%)",
                             "inset(-20% -20% -20% -20%)",
-                            "inset(35% -20% -20% -20%)",
-                            "inset(35% -20% -20% -20%)",
                             "inset(120% -20% -20% -20%)",
                             "inset(120% -20% -20% -20%)"
                           ]
                         }}
                         transition={{
-                          duration: 5.0,
-                          times: [0, 0.1, 0.5, 0.7, 0.9, 1.0],
+                          duration: 2.0,
+                          times: [0, 0.15, 0.85, 1.0],
                           ease: "easeInOut"
                         }}
                         style={{
@@ -821,8 +812,8 @@ export default function App() {
                         opacity: [0, 1, 1, 0],
                       }}
                       transition={{
-                        duration: 5.0,
-                        times: [0, 0.1, 0.9, 1.0],
+                        duration: 2.0,
+                        times: [0, 0.15, 0.85, 1.0],
                         ease: "easeInOut"
                       }}
                       className="relative text-8xl md:text-[12rem] font-black italic tracking-tighter select-none font-sans z-10 flex items-center justify-center"
@@ -843,15 +834,13 @@ export default function App() {
                           clipPath: [
                             "inset(-20% -20% -20% -20%)",
                             "inset(-20% -20% -20% -20%)",
-                            "inset(35% -20% -20% -20%)",
-                            "inset(35% -20% -20% -20%)",
                             "inset(120% -20% -20% -20%)",
                             "inset(120% -20% -20% -20%)"
                           ]
                         }}
                         transition={{
-                          duration: 5.0,
-                          times: [0, 0.1, 0.5, 0.7, 0.9, 1.0],
+                          duration: 2.0,
+                          times: [0, 0.15, 0.85, 1.0],
                           ease: "easeInOut"
                         }}
                         style={{
@@ -959,7 +948,7 @@ export default function App() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowUpdateModal(true)}
-              className={`glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border border-primary/30 text-primary bg-primary/10 transition-all pointer-events-auto flex items-center gap-2 shadow-[0_0_15px_rgba(99,102,241,0.3)] scale-90 md:scale-100 ${(!(showAdminAuth || showAdmin) && widgetPosition.includes('left')) ? 'origin-left' : 'origin-right'}`}
+              className={`glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border border-primary/30 text-primary bg-primary/10 transition-all pointer-events-auto hidden md:flex items-center gap-2 shadow-[0_0_15px_rgba(99,102,241,0.3)] scale-90 md:scale-100 ${(!(showAdminAuth || showAdmin) && widgetPosition.includes('left')) ? 'origin-left' : 'origin-right'}`}
             >
               <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-primary" />
               <span className="text-[10px] md:text-xs font-bold uppercase tracking-tighter hidden sm:inline">Update</span>
@@ -971,7 +960,7 @@ export default function App() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               animate={{
-                y: [0, -4, 0]
+                y: [0, -3, 0]
               }}
               transition={{
                 duration: 2.2,
@@ -979,10 +968,12 @@ export default function App() {
                 ease: "easeInOut"
               }}
               onClick={handleInstallClick}
-              className={`glass px-3 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border border-accent/30 text-accent bg-accent/10 transition-all pointer-events-auto flex items-center gap-2 shadow-[0_0_15px_rgba(168,85,247,0.3)] scale-90 md:scale-100 ${(!(showAdminAuth || showAdmin) && widgetPosition.includes('left')) ? 'origin-left' : 'origin-right'}`}
+              className={`glass px-3.5 py-1.5 md:px-4 md:py-2 rounded-xl md:rounded-2xl border border-accent/60 text-white bg-gradient-to-r from-accent/25 via-accent/35 to-primary/25 hover:from-accent/35 hover:to-primary/35 transition-all pointer-events-auto hidden md:flex items-center gap-2 shadow-[0_0_20px_rgba(244,114,182,0.35)] hover:shadow-[0_0_25px_rgba(244,114,182,0.55)] scale-95 md:scale-100 ${(!(showAdminAuth || showAdmin) && widgetPosition.includes('left')) ? 'origin-left' : 'origin-right'}`}
             >
-              <Download className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="text-[10px] md:text-xs font-bold uppercase tracking-tighter hidden sm:inline">Installer l'app</span>
+              <div className="p-1 rounded-lg bg-accent/30 text-accent flex items-center justify-center">
+                <Download className="w-3.5 h-3.5 md:w-4 md:h-4 text-white" />
+              </div>
+              <span className="text-[11px] md:text-xs font-bold uppercase tracking-wider text-white whitespace-nowrap">Installer l'app</span>
             </motion.button>
           )}
 
@@ -1023,80 +1014,28 @@ export default function App() {
               </div>
 
               <h2 className="text-4xl md:text-5xl font-display text-white mb-2 tracking-tighter leading-none">
-                UPDATE <span className="text-primary italic">12</span>
+                UPDATE
               </h2>
-              <p className="text-primary font-bold uppercase tracking-widest text-xs mb-8">Nouveautés majeures :</p>
+              <p className="text-primary font-bold uppercase tracking-widest text-xs mb-6">Nouveautés :</p>
               
-              <div className="space-y-6 mb-10 overflow-y-auto max-h-[40vh] pr-2 custom-scrollbar">
-                <div className="bg-primary/10 p-5 rounded-[2rem] border border-primary/30 relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent animate-pulse" />
-                  <div className="flex items-start gap-4 relative z-10">
-                    <div className="bg-primary p-3 rounded-2xl shadow-[0_0_20px_rgba(99,102,241,0.5)]">
-                      <Layout className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-bold text-xl uppercase tracking-tighter">Nouvelle Barre de Navigation</h3>
-                      <motion.p 
-                        animate={{ 
-                          color: ['#ffffff', '#ef4444', '#ffffff'],
-                          textShadow: ['0 0 0px transparent', '0 0 10px rgba(239, 68, 68, 0.5)', '0 0 0px transparent']
-                        }}
-                        transition={{ 
-                          duration: 1, 
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                        className="text-sm font-black"
-                      >
-                        Une nouvelle barre super stylée est maintenant dispo en bas !
-                      </motion.p>
-                    </div>
-                  </div>
+              <div className="mb-8 space-y-3">
+                <div className="bg-primary/10 p-4 rounded-2xl border border-primary/25 flex items-start gap-3.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-primary mt-1.5 shrink-0 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
+                  <p className="text-white font-medium text-sm md:text-base leading-snug">
+                    - supression de quelques bugs du site internet
+                  </p>
                 </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary/20 p-2 rounded-xl mt-1">
-                    <Clock className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-lg">Historique Amélioré</h3>
-                    <p className="text-slate-400 text-sm">Ajout de l'historique de jeu avec la possibilité de tout effacer.</p>
-                  </div>
+                <div className="bg-primary/10 p-4 rounded-2xl border border-primary/25 flex items-start gap-3.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-secondary mt-1.5 shrink-0 shadow-[0_0_8px_rgba(168,85,247,0.8)]" />
+                  <p className="text-white font-medium text-sm md:text-base leading-snug">
+                    - modification de la barre de navigation
+                  </p>
                 </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-secondary/20 p-2 rounded-xl mt-1">
-                    <Settings className="w-5 h-5 text-secondary" />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-lg">Nouveaux Paramètres</h3>
-                    <p className="text-slate-400 text-sm">Contrôlez l'affichage de l'heure, de la date et des boutons depuis la nouvelle page de paramètres.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-emerald-500/20 p-2 rounded-xl mt-1">
-                    <Zap className="w-5 h-5 text-emerald-500" />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-lg">Animations fluides</h3>
-                    <p className="text-slate-400 text-sm">L'animation d'introduction a été corrigée et optimisée.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 border-b border-white/5 pb-4">
-                  <div className="bg-accent/20 p-2 rounded-xl mt-1">
-                    <Shield className="w-5 h-5 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-lg">Interface Intelligente</h3>
-                    <p className="text-slate-400 text-sm">L'affichage s'adapte parfaitement lors de l'accès à l'admin ou aux paramètres pour une expérience claire.</p>
-                  </div>
-                </div>
-
-                <div className="bg-white/5 p-4 rounded-2xl border border-white/10 italic text-slate-400 text-xs flex items-center gap-3">
-                  <div className="h-8 w-1 bg-primary rounded-full" />
-                  Mettez à jour vos paramètres pour en profiter pleinement !
+                <div className="bg-primary/10 p-4 rounded-2xl border border-primary/25 flex items-start gap-3.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-accent mt-1.5 shrink-0 shadow-[0_0_8px_rgba(244,114,182,0.8)]" />
+                  <p className="text-white font-medium text-sm md:text-base leading-snug">
+                    - modifification de l'intro
+                  </p>
                 </div>
               </div>
 
@@ -1329,17 +1268,9 @@ export default function App() {
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ duration: 0.8 }}
                 >
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="inline-flex items-center gap-2 glass px-3 py-1.5 rounded-full mb-6 md:mb-8 border-primary/30"
-                  >
-                    <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-primary animate-pulse" />
-                    <span className="text-[10px] md:text-xs font-bold text-primary uppercase tracking-widest">Système d'Apprentissage</span>
-                  </motion.div>
-                  <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-9xl font-display mb-6 md:mb-8 tracking-tighter leading-[0.9] md:leading-[0.85] text-white">
+                  <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-9xl font-display mb-6 md:mb-8 tracking-tighter leading-[0.95] md:leading-[0.9] text-white">
                     Maths <br />
-                    <span className="neon-text italic">Play</span>
+                    <span className="neon-text italic inline-block pr-[0.35em] pb-[0.4em] -mb-[0.4em]">Play</span>
                   </h1>
                   <p className="text-slate-400 text-base md:text-xl max-w-xl mb-8 md:mb-10 leading-relaxed mx-auto lg:mx-0">
                     Maîtrise les concepts complexes avec des défis personnalisés.
@@ -1601,9 +1532,6 @@ export default function App() {
               )}
               {gameMode === 'grid' && (
                 <GridGame difficulty={difficulty} grade={grade} operation={operation} onBack={() => setGameState('home')} />
-              )}
-              {gameMode === 'memory' && (
-                <MemoryGame difficulty={difficulty} grade={grade} operation={operation} onBack={() => setGameState('home')} />
               )}
               {gameMode === 'pattern' && (
                 <PatternGame difficulty={difficulty} grade={grade} onBack={() => setGameState('home')} />
@@ -1986,6 +1914,40 @@ export default function App() {
               className="fixed top-20 left-4 right-4 z-[55] md:hidden"
             >
               <div className="glass p-3 rounded-2xl border border-white/10 bg-[#1a1c23]/95 backdrop-blur-xl shadow-2xl flex flex-col gap-1.5 pointer-events-auto">
+                {(showInstallBtn || showUpdateBtn) && (
+                  <div className="flex flex-col gap-1.5 pb-2 mb-1 border-b border-white/10">
+                    {showInstallBtn && (
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          handleInstallClick();
+                        }}
+                        className="flex items-center gap-4 p-3 rounded-xl bg-gradient-to-r from-accent/20 to-primary/10 border border-accent/40 hover:bg-accent/25 transition-colors group text-left"
+                      >
+                        <div className="p-2 rounded-lg bg-accent/30 text-white flex items-center justify-center">
+                          <Download className="w-5 h-5 text-white" />
+                        </div>
+                        <span className="text-white font-bold text-sm tracking-wide flex-1">Installer l'app</span>
+                      </button>
+                    )}
+
+                    {showUpdateBtn && (
+                      <button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          setShowUpdateModal(true);
+                        }}
+                        className="flex items-center gap-4 p-3 rounded-xl bg-primary/10 border border-primary/30 hover:bg-primary/20 transition-colors group text-left"
+                      >
+                        <div className="p-2 rounded-lg bg-primary/20 flex items-center justify-center">
+                          <Sparkles className="w-5 h-5 text-primary" />
+                        </div>
+                        <span className="text-white font-bold text-sm tracking-wide flex-1">Update</span>
+                      </button>
+                    )}
+                  </div>
+                )}
+
                 {BOTTOM_BAR_ITEMS.map((item) => (
                   <button key={item.id} onClick={() => handleBottomAction(item.action)} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition-colors group">
                     <div className={`p-2 rounded-lg ${item.bg} bg-opacity-20 flex items-center justify-center`}>
