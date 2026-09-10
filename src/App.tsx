@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2, Bell, BellOff, Smartphone, Monitor, AlertCircle, Download, Keyboard, Backpack, Crosshair, ClipboardList, ShoppingCart, Droplet, Castle, Calendar, Menu, Dumbbell, Settings, ArrowUp, Clock, LogOut } from 'lucide-react';
+import { Plus, Minus, X, Divide, Brain, Sparkles, Star, Gamepad2, Calculator, Zap, Grid3X3, Loader2, Hash, Percent, Binary, Sigma, GraduationCap, ArrowRight, Play, BookOpen, Trophy as TrophyIcon, BrainCircuit, Shield, Layout, Timer, CheckCircle2, Bell, BellOff, Smartphone, Monitor, AlertCircle, Download, Keyboard, Backpack, Crosshair, ClipboardList, ShoppingCart, Droplet, Castle, Calendar, Menu, Dumbbell, Settings, ArrowUp, Clock, LogOut, Apple, Laptop } from 'lucide-react';
 import { HistoryModal } from './components/HistoryModal';
 import { MathGame } from './components/MathGame';
 import { SpeedGame } from './components/SpeedGame';
@@ -185,9 +185,10 @@ export default function App() {
     };
   }, []);
 
-  const [installStep, setInstallStep] = useState<'none' | 'device' | 'os' | 'loading' | 'redirection' | 'error'>('none');
+  const [installStep, setInstallStep] = useState<'none' | 'device' | 'os' | 'pc_os' | 'loading' | 'redirection' | 'error'>('none');
   const [installErrorMsg, setInstallErrorMsg] = useState('');
   const [installProgress, setInstallProgress] = useState(0);
+  const [redirectUrl, setRedirectUrl] = useState('https://sites.google.com/view/mathsplay-install-app/accueil');
 
   useEffect(() => {
     if (installStep === 'loading') {
@@ -208,11 +209,15 @@ export default function App() {
       return () => clearInterval(interval);
     } else if (installStep === 'redirection') {
       const timer = setTimeout(() => {
-        window.location.href = "https://sites.google.com/view/mathsplay-install-app/accueil";
+        try {
+          window.location.href = redirectUrl;
+        } catch (e) {
+          console.error(e);
+        }
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [installStep]);
+  }, [installStep, redirectUrl]);
 
   const handleInstallClick = () => {
     setInstallStep('device');
@@ -220,10 +225,25 @@ export default function App() {
 
   const handleDeviceSelect = (device: 'pc' | 'mobile') => {
     if (device === 'pc') {
-      setInstallErrorMsg("MathsPlay n'est pas encore disponible sur pc");
-      setInstallStep('error');
+      setInstallStep('pc_os');
     } else {
       setInstallStep('os');
+    }
+  };
+
+  const handlePCOSSelect = (os: 'apple' | 'windows') => {
+    if (os === 'apple') {
+      setInstallErrorMsg("l'application MathsPlay n'est pas encore disponible sur apple.");
+      setInstallStep('error');
+    } else {
+      const url = "https://sites.google.com/view/installer-maths-play-windows/inicio";
+      setRedirectUrl(url);
+      setInstallStep('redirection');
+      try {
+        window.location.href = url;
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
@@ -232,6 +252,7 @@ export default function App() {
       setInstallErrorMsg("MathsPlay n'est pas encore disponible sur ios");
       setInstallStep('error');
     } else {
+      setRedirectUrl("https://sites.google.com/view/mathsplay-install-app/accueil");
       setInstallStep('loading');
       setInstallProgress(0);
     }
@@ -1014,11 +1035,31 @@ export default function App() {
               </div>
 
               <h2 className="text-4xl md:text-5xl font-display text-white mb-2 tracking-tighter leading-none">
-                UPDATE
+                UPDATE <span className="text-primary italic">13</span>
               </h2>
               <p className="text-primary font-bold uppercase tracking-widest text-xs mb-6">Nouveautés :</p>
               
-              <div className="mb-8 space-y-3">
+              <div className="mb-8 space-y-3 max-h-[50vh] overflow-y-auto pr-1">
+                <div className="bg-sky-500/10 p-4 rounded-2xl border border-sky-500/30 flex flex-col gap-3">
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-sky-400 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
+                    <p className="text-white font-medium text-sm md:text-base leading-snug">
+                      - l'application MathsPlay est désormais disponible sur windows
+                    </p>
+                  </div>
+                  <div className="pl-6">
+                    <a
+                      href="https://sites.google.com/view/installer-maths-play-windows/inicio"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-500 to-primary text-white rounded-xl text-xs font-bold shadow-[0_0_15px_rgba(14,165,233,0.3)] hover:scale-105 transition-all"
+                    >
+                      <Laptop className="w-4 h-4" />
+                      <span>Installer pour Windows</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
                 <div className="bg-primary/10 p-4 rounded-2xl border border-primary/25 flex items-start gap-3.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-primary mt-1.5 shrink-0 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
                   <p className="text-white font-medium text-sm md:text-base leading-snug">
@@ -1135,6 +1176,28 @@ export default function App() {
                 </div>
               )}
 
+              {installStep === 'pc_os' && (
+                <div className="text-center">
+                  <h2 className="text-2xl font-display text-white mb-8 uppercase tracking-tighter">PC Apple ou Windows ?</h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button 
+                      onClick={() => handlePCOSSelect('apple')}
+                      className="p-6 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl flex flex-col items-center gap-4 transition-all hover:scale-105 group"
+                    >
+                      <Apple className="w-10 h-10 text-slate-300 group-hover:text-white" />
+                      <span className="text-white font-bold">Apple</span>
+                    </button>
+                    <button 
+                      onClick={() => handlePCOSSelect('windows')}
+                      className="p-6 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl flex flex-col items-center gap-4 transition-all hover:scale-105 group"
+                    >
+                      <Laptop className="w-10 h-10 text-sky-400 group-hover:text-sky-300" />
+                      <span className="text-white font-bold">Windows</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {installStep === 'os' && (
                 <div className="text-center">
                   <h2 className="text-2xl font-display text-white mb-8 uppercase tracking-tighter">Choisissez votre système</h2>
@@ -1177,7 +1240,15 @@ export default function App() {
                     <CheckCircle2 className="w-8 h-8 text-accent" />
                   </div>
                   <h2 className="text-xl font-display text-white mb-4 uppercase tracking-tighter">Installation prête</h2>
-                  <p className="text-slate-400 text-sm animate-pulse">Redirection...</p>
+                  <p className="text-slate-400 text-sm animate-pulse mb-4">Redirection en cours...</p>
+                  <a
+                    href={redirectUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block px-4 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold transition-all shadow-lg"
+                  >
+                    Ouvrir la page de téléchargement
+                  </a>
                 </div>
               )}
 
